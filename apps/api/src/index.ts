@@ -1,6 +1,10 @@
+import 'dotenv/config';
 import { serve } from '@hono/node-server';
 import api from './api/routers';
 import generateOpenApiYml from '../scripts/generate-openapi-yml';
+import { drizzle } from 'drizzle-orm/libsql';
+
+const db = drizzle(process.env.DB_FILE_NAME!);
 
 // スキーマファイルを生成
 generateOpenApiYml();
