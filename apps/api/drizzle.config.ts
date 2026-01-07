@@ -4,9 +4,9 @@ import env from '@consts/env';
 
 export default defineConfig({
   out: './drizzle',
-  schema: './src/db/schema.ts',
+  schema: './src/db/**/*.schema.ts',
   dialect: 'sqlite',
   dbCredentials: {
-    url: env.DB_FILE_NAME,
+    url: "file:" + env.DB_FILE_NAME,
   },
 });
