@@ -1,4 +1,3 @@
-import 'dotenv/config';
 import { serve } from '@hono/node-server';
 import api from './api/routers';
 import generateOpenApiYml from '../scripts/generate-openapi-yml';

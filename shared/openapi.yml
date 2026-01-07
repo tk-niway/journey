@@ -30,10 +30,21 @@ paths:
                   name:
                     type: string
                     example: John Doe
-                  age:
-                    type: number
-                    example: 42
+                  email:
+                    type: string
+                    format: email
+                    example: john.doe@example.com
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: '2021-01-01'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2021-01-01'
                 required:
                   - id
                   - name
-                  - age
+                  - email
+                  - createdAt
+                  - updatedAt
