@@ -1,5 +1,5 @@
 import yaml from 'js-yaml';
-import app from '../src/api/routers';
+import app from '../src/api';
 import { OPENAPI_INFO } from '../src/consts/openapi-info';
 import { writeFileSync } from 'fs';
 

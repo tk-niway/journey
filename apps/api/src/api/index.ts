@@ -1,8 +1,9 @@
 import { swaggerUI } from "@hono/swagger-ui";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import users from "./users";
+import usersRouter from "./user/routers/users.router";
+import authRouter from "./auth/routers/auth.router";
 import { cors } from "hono/cors";
-import { OPENAPI_INFO } from "../../consts/openapi-info";
+import { OPENAPI_INFO } from "../consts/openapi-info";
 
 const app = new OpenAPIHono();
 
@@ -27,6 +28,7 @@ app.get(
 
 app.doc('/schema', OPENAPI_INFO);
 
-app.route("api", users);
+app.route("api", usersRouter);
+app.route("api", authRouter);
 
 export default app;

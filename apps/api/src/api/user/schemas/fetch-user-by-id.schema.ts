@@ -1,9 +1,8 @@
 import { createRoute, z } from '@hono/zod-openapi';
+import { userId, userObjectSchema } from './user-object.schema';
 
 const fetchUserByIdRequest = z.object({
-  id: z
-    .string()
-    .min(3)
+  id: userId
     .openapi({
       param: {
         name: 'id',
@@ -15,24 +14,7 @@ const fetchUserByIdRequest = z.object({
 
 type FetchUserByIdRequest = z.infer<typeof fetchUserByIdRequest>;
 
-const fetchUserByIdResponse = z
-  .object({
-    id: z.string().openapi({
-      example: '123',
-    }),
-    name: z.string().openapi({
-      example: 'John Doe',
-    }),
-    email: z.string().email().openapi({
-      example: 'john.doe@example.com',
-    }),
-    createdAt: z.date().openapi({
-      example: '2021-01-01',
-    }),
-    updatedAt: z.date().openapi({
-      example: '2021-01-01',
-    }),
-  });
+const fetchUserByIdResponse = userObjectSchema;
 
 type FetchUserByIdResponse = z.infer<typeof fetchUserByIdResponse>;
 
