@@ -1,10 +1,9 @@
 import type { FetchUserByIdRequest, FetchUserByIdResponse } from "../../schemas/user/fetch-user-by-id";
 import { UserApplication } from "../../../applications/user/user.application";
 import { HTTPException } from "hono/http-exception";
-import { databaseService } from "@db/service";
 
 export const fetchUserById = async (params: FetchUserByIdRequest): Promise<FetchUserByIdResponse> => {
-  const userApplication = new UserApplication(databaseService);
+  const userApplication = new UserApplication();
 
   const user = await userApplication.findUserById(params.id);
 
