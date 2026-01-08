@@ -3,7 +3,7 @@ import { UserRepository } from "@domains/user/repositories/user.repository";
 import { usersTable } from "@db/users/users.schema";
 import { UserFactory } from "@domains/user/factories/user.factory";
 import { eq } from "drizzle-orm";
-import { DatabaseService } from "@db/service";
+import { DatabaseService } from "@db/database.service";
 import { UserCreateError } from "@db/users/users.error";
 import logger from "@lib/logger";
 

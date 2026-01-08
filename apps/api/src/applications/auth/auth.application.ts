@@ -1,4 +1,4 @@
-import { databaseService, DatabaseService } from "@db/service";
+import { databaseService, DatabaseService } from "@db/database.service";
 import { CreateUserInput } from "@domains/user/types/user.type";
 import { UserApplication } from "../user/user.application";
 import { hashPassword } from "@lib/password-hasher";

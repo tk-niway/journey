@@ -1,4 +1,4 @@
-import { databaseService, DatabaseService } from "@db/service";
+import { databaseService, DatabaseService } from "@db/database.service";
 import { UsersRepository } from "@db/users/users.repository";
 import { UserEntity } from "@domains/user/entities/user.entity";
 import { EmailAlreadyExistsError, UserAlreadyExistsError } from "@domains/user/errors/user.errors";
