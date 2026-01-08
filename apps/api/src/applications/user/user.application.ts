@@ -1,11 +1,12 @@
-import { databaseService, DatabaseServiceType } from "@db/service";
+import { databaseService, DatabaseService } from "@db/service";
 import { UsersRepository } from "@db/users/users.repository";
 import { UserEntity } from "@domains/user/entities/user.entity";
+import { EmailAlreadyExistsError, UserAlreadyExistsError } from "@domains/user/errors/user.errors";
 import { UserFactory } from "@domains/user/factories/user.factory";
 import { CreateUserInput } from "@domains/user/types/user.type";
 
 export class UserApplication {
-  constructor(dbClient: DatabaseServiceType = databaseService) {
+  constructor(dbClient: DatabaseService = databaseService) {
     this.userRepository = new UsersRepository(dbClient);
   }
 
@@ -16,7 +17,11 @@ export class UserApplication {
 
     const existingUser = await this.findUserById(newUser.id);
 
-    if (existingUser) throw new Error("User already exists");
+    if (existingUser) throw new UserAlreadyExistsError();
+
+    const existingEmail = await this.userRepository.findByEmail(input.email);
+
+    if (existingEmail) throw new EmailAlreadyExistsError();
 
     return this.userRepository.create(newUser, input.password);
   }

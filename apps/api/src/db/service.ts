@@ -8,8 +8,8 @@ import Database from 'better-sqlite3';
 const DB_PATH = env.DB_FILE_NAME;
 
 // const schema = { usersTable };
-// export type DatabaseServiceType = BetterSQLite3Database<typeof schema>;
-// export const databaseService:DatabaseServiceType = drizzle(DB_PATH, { schema });
+// export type DatabaseService = BetterSQLite3Database<typeof schema>;
+// export const databaseService:DatabaseService = drizzle(DB_PATH, { schema });
 
 // 以下は複数コネクションの時に良いらしいが今は使わない
 // グローバルスコープにキャッシュ用の変数を定義（TypeScript用）
@@ -31,9 +31,9 @@ if (process.env.NODE_ENV !== 'production') {
 
 const schema = { usersTable };
 
-export type DatabaseServiceType = BetterSQLite3Database<typeof schema>;
+export type DatabaseService = BetterSQLite3Database<typeof schema>;
 
 // Drizzleのインスタンス化
 // { schema } を渡すことで、クエリ作成時に型推論が効くようになります
-export const databaseService: DatabaseServiceType = drizzle(conn, { schema });
+export const databaseService: DatabaseService = drizzle(conn, { schema });
 
