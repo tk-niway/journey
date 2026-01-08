@@ -3,11 +3,11 @@ import { UserRepository } from "@domains/user/repositories/user.repository";
 import { usersTable } from "@db/users/users.schema";
 import { UserFactory } from "@domains/user/factories/user.factory";
 import { eq } from "drizzle-orm";
-import { DbClientType } from "@db/client";
+import { DatabaseServiceType } from "@db/service";
 
 export class UsersRepository implements UserRepository {
 
-  constructor(private readonly dbClient: DbClientType) { }
+  constructor(private readonly dbClient: DatabaseServiceType) { }
 
   async findById(id: string) {
     const user = await this.dbClient.query.usersTable.findFirst({
