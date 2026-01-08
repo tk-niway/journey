@@ -1,16 +1,17 @@
 import { databaseService, DatabaseService } from "@db/database.service";
-import { UsersRepository } from "@db/users/users.repository";
+import { UsersTableRepository } from "@db/users/users-table.repository";
 import { UserEntity } from "@domains/user/entities/user.entity";
 import { EmailAlreadyExistsError, UserAlreadyExistsError } from "@domains/user/errors/user.errors";
 import { UserFactory } from "@domains/user/factories/user.factory";
+import { UserRepository } from "@domains/user/repositories/user-repository.interface";
 import { CreateUserInput } from "@domains/user/types/user.type";
 
 export class UserApplication {
   constructor(dbClient: DatabaseService = databaseService) {
-    this.userRepository = new UsersRepository(dbClient);
+    this.userRepository = new UsersTableRepository(dbClient);
   }
 
-  private userRepository: UsersRepository;
+  private userRepository: UserRepository;
 
   async createUser(input: CreateUserInput): Promise<UserEntity> {
     const newUser = UserFactory.createNewEntity(input);

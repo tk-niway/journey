@@ -1,13 +1,13 @@
 import { UserEntity } from "@domains/user/entities/user.entity";
-import { UserRepository } from "@domains/user/repositories/user.repository";
-import { usersTable } from "@db/users/users.schema";
+import { usersTable } from "@db/users/users-table.schema";
 import { UserFactory } from "@domains/user/factories/user.factory";
 import { eq } from "drizzle-orm";
 import { DatabaseService } from "@db/database.service";
-import { UserCreateError } from "@db/users/users.error";
 import logger from "@lib/logger";
+import { UserRepository } from "@domains/user/repositories/user-repository.interface";
+import { UserTableCreateError } from "@db/users/users-table.error";
 
-export class UsersRepository implements UserRepository {
+export class UsersTableRepository implements UserRepository {
 
   constructor(private readonly dbClient: DatabaseService) { }
 
@@ -44,8 +44,8 @@ export class UsersRepository implements UserRepository {
       return UserFactory.createEntity(createdUser);
 
     } catch (error) {
-      logger.error(`${UserCreateError.name}:create`, error);
-      throw new UserCreateError();
+      logger.error(`${UsersTableRepository.name}:create`, error);
+      throw new UserTableCreateError();
     }
   }
 

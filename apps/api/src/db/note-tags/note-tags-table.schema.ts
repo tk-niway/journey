@@ -1,13 +1,13 @@
-import { usersTable } from "@db/users/users.schema";
+import { notesTable } from "@db/notes/notes-table.schema";
+import { tagsTable } from "@db/tags/tags-table.schema";
 import { sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { nanoid } from "nanoid";
 
-export const notesTable = sqliteTable("notes", {
+export const noteTagsTable = sqliteTable("note_tags", {
   id: text().$defaultFn(() => nanoid()).primaryKey().notNull(),
-  title: text({ length: 128 }).notNull(),
-  content: text({ length: 20000 }).notNull(),
-  userId: text().references(() => usersTable.id, { onDelete: 'cascade' }).notNull(),
+  noteId: text().references(() => notesTable.id, { onDelete: 'cascade' }).notNull(),
+  tagId: text().references(() => tagsTable.id).notNull(),
   createdAt: integer("created_at",{ mode: "timestamp" }).notNull()
     .default(sql`(unixepoch())`),
   updatedAt: integer("updated_at",{ mode: "timestamp" }).notNull()

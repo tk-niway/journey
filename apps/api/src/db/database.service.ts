@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { usersTable } from './users/users.schema';
+import { usersTable } from './users/users-table.schema';
 import env from '@consts/env';
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import Database from 'better-sqlite3';
