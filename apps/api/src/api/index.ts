@@ -9,6 +9,7 @@ import logger from "@lib/logger";
 import { UserTableCreateError } from "@db/users/users-table.error";
 import { UserAlreadyExistsError, EmailAlreadyExistsError } from "@domains/user/errors/user.error";
 import { UserApiUserNotFoundError } from "./user/errors/user-api.error";
+import { ErrorResponse } from "./schemas/error.schema";
 
 const app = new OpenAPIHono();
 
@@ -35,27 +36,37 @@ app.doc('/schema', OPENAPI_INFO);
 app.route("api", usersRouter);
 app.route("api", authRouter);
 
+const createErrorResponse = (
+  error: string,
+  code: string
+): ErrorResponse => {
+  return {
+    error: {
+      message: error,
+      code
+    }
+  };
+};
 
 app.onError((err, c) => {
   logger.error("Global Error Handler", err);
 
   if (err instanceof UserAlreadyExistsError) {
-    return c.json({ error: err.message }, 409);
+    return c.json(createErrorResponse(err.message, err.code), 409);
   }
-
   if (err instanceof EmailAlreadyExistsError) {
-    return c.json({ error: err.message }, 409);
+    return c.json(createErrorResponse(err.message, err.code), 409);
   }
 
   if (err instanceof UserTableCreateError) {
-    return c.json({ error: err.message }, 500);
+    return c.json(createErrorResponse(err.message, err.code), 500);
   }
 
   if (err instanceof UserApiUserNotFoundError) {
-    return c.json({ error: err.message }, 404);
+    return c.json(createErrorResponse(err.message, err.code), 404);
   }
 
-  return c.json({ error: "Internal Server Error" }, 500);
+  return c.json(createErrorResponse("Internal Server Error", "INTERNAL_SERVER_ERROR"), 500);
 });
 
 app.notFound((c) => {
