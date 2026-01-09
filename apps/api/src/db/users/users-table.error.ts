@@ -1,6 +1,6 @@
 export class UserTableCreateError extends Error {
-  constructor(message: string = "ユーザーの作成処理に失敗しました") {
-    super(message);
+  constructor() {
+    super(`ユーザー作成に失敗しました、しばらく経ってから再度お試しください`);
     this.name = this.constructor.name;
   }
 }
