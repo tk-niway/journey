@@ -4,6 +4,11 @@ import usersRouter from "./user/routers/users.router";
 import authRouter from "./auth/routers/auth.router";
 import { cors } from "hono/cors";
 import { OPENAPI_INFO } from "../consts/openapi-info";
+import { logger as honoLogger } from "hono/logger";
+import logger from "@lib/logger";
+import { UserTableCreateError } from "@db/users/users-table.error";
+import { UserAlreadyExistsError, EmailAlreadyExistsError } from "@domains/user/errors/user.error";
+import { UserApiUserNotFoundError } from "./user/errors/user-api.error";
 
 const app = new OpenAPIHono();
 
@@ -15,20 +20,46 @@ app.use('/api/*', cors({
   credentials: false,
 }));
 
+app.use("*", honoLogger((message) => logger.info(message)));
+
 app.get('/health', (c) => {
   return c.text('Hello Hono!');
 });
-
 app.get(
   '/docs',
   swaggerUI({
     url: '/schema',
   })
 );
-
 app.doc('/schema', OPENAPI_INFO);
-
 app.route("api", usersRouter);
 app.route("api", authRouter);
+
+
+app.onError((err, c) => {
+  logger.error("Global Error Handler", err);
+
+  if (err instanceof UserAlreadyExistsError) {
+    return c.json({ error: err.message }, 409);
+  }
+
+  if (err instanceof EmailAlreadyExistsError) {
+    return c.json({ error: err.message }, 409);
+  }
+
+  if (err instanceof UserTableCreateError) {
+    return c.json({ error: err.message }, 500);
+  }
+
+  if (err instanceof UserApiUserNotFoundError) {
+    return c.json({ error: err.message }, 404);
+  }
+
+  return c.json({ error: "Internal Server Error" }, 500);
+});
+
+app.notFound((c) => {
+  return c.json({ error: `Not Found ${c.req.path}` }, 404);
+});
 
 export default app;

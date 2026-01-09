@@ -1,6 +1,6 @@
 import type { FetchUserByIdRequest, FetchUserByIdResponse } from "../schemas/fetch-user-by-id.schema";
 import { UserApplication } from "../../../applications/user/user.application";
-import { HTTPException } from "hono/http-exception";
+import { UserApiUserNotFoundError } from "../errors/user-api.error";
 
 export const fetchUserByIdHandler = async (params: FetchUserByIdRequest): Promise<FetchUserByIdResponse> => {
   const userApplication = new UserApplication();
@@ -8,7 +8,7 @@ export const fetchUserByIdHandler = async (params: FetchUserByIdRequest): Promis
   const user = await userApplication.findUserById(params.id);
 
   if (!user) {
-    throw new HTTPException(404, { message: 'User not found' });
+    throw new UserApiUserNotFoundError(params.id);
   }
 
   return user.values;
