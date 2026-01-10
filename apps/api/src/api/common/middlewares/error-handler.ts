@@ -8,6 +8,12 @@ import {
 import { UserApiUserNotFoundError } from '@api/users/errors/user-api.error';
 import { ErrorResponse } from '@api/common/schemas/error.schema';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
+import {
+  NotFoundTokenError,
+  InvalidUserError,
+  InvalidTokenError,
+  ExpiredTokenError,
+} from '@api/auth/errors/auth.error';
 
 // カスタムエラーの基底インターフェース
 interface CustomError extends Error {
@@ -20,6 +26,10 @@ const ERROR_STATUS_MAP = new Map<string, ContentfulStatusCode>([
   [EmailAlreadyExistsError.name, 409],
   [UserApiUserNotFoundError.name, 404],
   [UserTableCreateError.name, 500],
+  [NotFoundTokenError.name, 401],
+  [InvalidUserError.name, 401],
+  [InvalidTokenError.name, 401],
+  [ExpiredTokenError.name, 401],
 ]);
 
 const createErrorResponse = (message: string, code: string): ErrorResponse => {

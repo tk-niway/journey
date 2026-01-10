@@ -5,7 +5,8 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production']).default('development'),
   HOST: z.string().default('0.0.0.0'),
   PORT: z.int(),
-  DB_FILE_NAME: z.string(),
+  DB_FILE_NAME: z.string().nonempty('DB_FILE_NAME is required'),
+  AUTH_SECRET: z.string().nonempty('AUTH_SECRET is required'),
 });
 
 const env = envSchema.parse({

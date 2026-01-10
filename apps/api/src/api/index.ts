@@ -10,6 +10,7 @@ import {
   errorHandler,
   notFoundHandler,
 } from '@api/common/middlewares/error-handler';
+import { verifyAccessToken } from '@api/common/middlewares/access-token-handler';
 
 const app = new OpenAPIHono();
 
@@ -17,7 +18,7 @@ app.use(
   '/api/*',
   cors({
     origin: '*',
-    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowMethods: ['*'],
     allowHeaders: ['Content-Type', 'Authorization'],
     exposeHeaders: ['Content-Type', 'Authorization'],
     credentials: false,
@@ -39,6 +40,7 @@ app.get(
   })
 );
 app.doc('/schema', OPENAPI_INFO);
+app.use('api/*', verifyAccessToken);
 app.route('api', usersRouter);
 app.route('api', authRouter);
 

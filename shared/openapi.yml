@@ -48,6 +48,50 @@ paths:
                   - name
                   - createdAt
                   - updatedAt
+  /api/users/me:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+              required:
+                - accessToken
+      responses:
+        '200':
+          description: Retrieve the current user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                    example: '123'
+                  email:
+                    type: string
+                    example: john.doe@example.com
+                  name:
+                    type: string
+                    example: John Doe
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: '2021-01-01'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2021-01-01'
+                required:
+                  - id
+                  - email
+                  - name
+                  - createdAt
+                  - updatedAt
   /api/auth/signup:
     post:
       requestBody:
@@ -101,3 +145,60 @@ paths:
                   - name
                   - createdAt
                   - updatedAt
+  /api/auth/login:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                        example: '123'
+                      email:
+                        type: string
+                        example: john.doe@example.com
+                      name:
+                        type: string
+                        example: John Doe
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: '2021-01-01'
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        example: '2021-01-01'
+                    required:
+                      - id
+                      - email
+                      - name
+                      - createdAt
+                      - updatedAt
+                required:
+                  - accessToken
+                  - user
