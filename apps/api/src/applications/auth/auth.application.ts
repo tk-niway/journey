@@ -7,7 +7,7 @@ import {
   InvalidPasswordError,
 } from '@domains/user/errors/user.error';
 import { UserRepository } from '@domains/user/repositories/user-repository.interface';
-import { UsersTableRepository } from '@db/users/users-table.repository';
+import { UsersTableRepository } from '@db/repositories/users/users-table.repository';
 
 export class AuthApplication {
   constructor(dbService: DatabaseService = databaseService) {

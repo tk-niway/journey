@@ -1,5 +1,5 @@
 import { databaseService, DatabaseService } from '@db/database.service';
-import { UsersTableRepository } from '@db/users/users-table.repository';
+import { UsersTableRepository } from '@db/repositories/users/users-table.repository';
 import { UserEntity } from '@domains/user/entities/user.entity';
 import { UserRepository } from '@domains/user/repositories/user-repository.interface';
 

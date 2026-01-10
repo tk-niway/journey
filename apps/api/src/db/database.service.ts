@@ -1,12 +1,15 @@
 import { drizzle } from 'drizzle-orm/better-sqlite3';
-import { usersTable, usersTableRelations } from './users/users-table.schema';
+import {
+  usersTable,
+  usersTableRelations,
+} from '@db/schemas/users-table.schema';
 import env from '@consts/env';
 import { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
 import Database from 'better-sqlite3';
 import {
   userCredentialsTable,
   userCredentialsTableRelations,
-} from '@db/user-credentials/user-credentials-table.schema';
+} from '@db/schemas/user-credentials-table.schema';
 
 // データベースファイルのパス
 const DB_PATH = env.DB_FILE_NAME;

@@ -1,7 +1,7 @@
 import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
-import usersRouter from '@api/users/routers/users.router';
-import authRouter from '@api/auth/routers/auth.router';
+import usersRouter from '@api/routes/users/index';
+import authRouter from '@api/routes/auth/index';
 import { cors } from 'hono/cors';
 import { OPENAPI_INFO } from '@consts/openapi-info';
 import { logger as honoLogger } from 'hono/logger';
@@ -9,8 +9,8 @@ import logger from '@lib/logger';
 import {
   errorHandler,
   notFoundHandler,
-} from '@api/common/middlewares/error-handler';
-import { verifyAccessToken } from '@api/common/middlewares/access-token-handler';
+} from '@api/middlewares/error.middleware';
+import { verifyAccessToken } from '@api/middlewares/access-token.middleware';
 
 const app = new OpenAPIHono();
 

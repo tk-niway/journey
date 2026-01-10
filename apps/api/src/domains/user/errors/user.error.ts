@@ -1,4 +1,6 @@
-export class UserAlreadyExistsError extends Error {
+import { DomainErrorAbstract } from '@lib/error/domain-error.abstract';
+
+export class UserAlreadyExistsError extends DomainErrorAbstract {
   public code: string = 'USER_ID_ALREADY_EXISTS';
   constructor(userId: string) {
     super(`このユーザーは既に存在します id:${userId}`);
@@ -6,7 +8,7 @@ export class UserAlreadyExistsError extends Error {
   }
 }
 
-export class EmailAlreadyExistsError extends Error {
+export class EmailAlreadyExistsError extends DomainErrorAbstract {
   public code: string = 'EMAIL_ALREADY_EXISTS';
   constructor(email: string) {
     super(`このメールアドレスは既に登録されています email:${email}`);
@@ -14,7 +16,7 @@ export class EmailAlreadyExistsError extends Error {
   }
 }
 
-export class UserNotFoundError extends Error {
+export class UserNotFoundError extends DomainErrorAbstract {
   public code: string = 'USER_NOT_FOUND';
   constructor(email: string) {
     super(`ユーザーが見つかりませんでした email:${email}`);
@@ -22,7 +24,7 @@ export class UserNotFoundError extends Error {
   }
 }
 
-export class InvalidPasswordError extends Error {
+export class InvalidPasswordError extends DomainErrorAbstract {
   public code: string = 'INVALID_PASSWORD';
   constructor() {
     super(`パスワードが間違っています`);
