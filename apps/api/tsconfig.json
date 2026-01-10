@@ -6,20 +6,17 @@
     "strict": true,
     "verbatimModuleSyntax": false,
     "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "outDir": "./dist",
     "paths": {
       "@lib/*": ["./src/lib/*"],
-      "@consts/*": ["./src/consts/*"],
+      "@consts/*": ["./src/lib/consts/*"],
       "@db/*": ["./src/db/*"],
       "@domains/*": ["./src/domains/*"],
-      "@scripts/*": ["./scripts/*"],
       "@api/*": ["./src/api/*"],
-      "@applications/*": ["./src/applications/*"],
+      "@applications/*": ["./src/applications/*"]
     }
   },
   "exclude": ["node_modules"]

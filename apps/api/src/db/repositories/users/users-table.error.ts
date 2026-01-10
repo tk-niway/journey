@@ -1,4 +1,4 @@
-import { DbErrorAbstract } from '@db/lib/error/db-error.abstract';
+import { DbErrorAbstract } from '@db/lib/errors/db-error.abstract';
 
 export class UserCreateDbError extends DbErrorAbstract {
   public code: string = 'USER_CREATE_USER_DB_ERROR';

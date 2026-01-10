@@ -2,7 +2,7 @@ import { serve } from '@hono/node-server';
 import api from './api';
 import generateOpenApiYml from '../scripts/generate-openapi-yml';
 import env from '@consts/env';
-import logger from '@lib/logger';
+import logger from '@lib/loggers';
 
 // スキーマファイルを生成
 generateOpenApiYml();

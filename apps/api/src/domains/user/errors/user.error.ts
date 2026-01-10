@@ -1,4 +1,4 @@
-import { DomainErrorAbstract } from '@lib/error/domain-error.abstract';
+import { DomainErrorAbstract } from '@lib/errors/domain-error.abstract';
 
 export class UserAlreadyExistsError extends DomainErrorAbstract {
   public code: string = 'USER_ID_ALREADY_EXISTS';

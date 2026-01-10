@@ -5,7 +5,7 @@ import authRouter from '@api/routes/auth/index';
 import { cors } from 'hono/cors';
 import { OPENAPI_INFO } from '@consts/openapi-info';
 import { logger as honoLogger } from 'hono/logger';
-import logger from '@lib/logger';
+import logger from '@lib/loggers';
 import {
   errorHandler,
   notFoundHandler,

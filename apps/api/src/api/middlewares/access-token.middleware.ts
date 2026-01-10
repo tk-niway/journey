@@ -2,7 +2,7 @@ import { sign, verify } from 'hono/jwt';
 import { setCookie, getCookie } from 'hono/cookie';
 import { Context, MiddlewareHandler, Next } from 'hono';
 import env from '@consts/env';
-import logger from '@lib/logger';
+import logger from '@lib/loggers';
 import {
   ExpiredTokenApiError,
   InvalidTokenApiError,

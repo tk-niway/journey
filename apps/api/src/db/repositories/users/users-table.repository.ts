@@ -3,7 +3,7 @@ import { usersTable } from '@db/schemas/users-table.schema';
 import { UserFactory } from '@domains/user/factories/user.factory';
 import { eq } from 'drizzle-orm';
 import { DatabaseService } from '@db/database.service';
-import logger from '@lib/logger';
+import logger from '@lib/loggers';
 import { UserRepository } from '@domains/user/repositories/user-repository.interface';
 import {
   UserCredentialCreateDbError,

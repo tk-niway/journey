@@ -1,5 +1,5 @@
 import { Context } from 'hono';
-import logger from '@lib/logger';
+import logger from '@lib/loggers';
 import {
   UserCreateDbError,
   UserCreateTransactionDbError,
@@ -13,8 +13,8 @@ import {
 import { ErrorResponse } from '@api/schemas/error.schema';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import { ApiError } from '@api/errors';
-import { DomainErrorAbstract } from '@lib/error/domain-error.abstract';
-import { DbErrorAbstract } from '@db/lib/error/db-error.abstract';
+import { DomainErrorAbstract } from '@lib/errors/domain-error.abstract';
+import { DbErrorAbstract } from '@db/lib/errors/db-error.abstract';
 
 // DomainErrorAbstractのエラークラス名とステータスコードのマッピング
 const ERROR_STATUS_MAP = new Map<string, ContentfulStatusCode>([
