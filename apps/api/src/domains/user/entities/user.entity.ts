@@ -1,37 +1,36 @@
-import { UserType } from "@domains/user/types/user.type";
-import { UserValue } from "@domains/user/values/user.value";
+import { UserCredentialValue, UserCredentialValueObject } from "@domains/user/values/user-credential.value";
+import { UserValue, UserValueObject } from "@domains/user/values/user.value";
 
 export class UserEntity {
-  constructor(values: UserValue) {
-    this._values = values;
+  constructor(values: UserValue, userCredentialValue: UserCredentialValue) {
+    this._userValues = values;
+    this._userCredentialValue = userCredentialValue;
   }
 
-  private _values: UserValue;
+  private _userValues: UserValue;
+  private _userCredentialValue: UserCredentialValue;
 
-  get values(): UserType {
-    return this._values.values;
-  }
-  get id(): string {
-    return this._values.id;
-  }
-  get name(): string {
-    return this._values.name;
-  }
-  get email(): string {
-    return this._values.email;
-  }
-  get createdAt(): Date {
-    return this._values.createdAt;
-  }
-  get updatedAt(): Date {
-    return this._values.updatedAt;
+  get values(): UserValueObject {
+    return this._userValues.values;
   }
 
-  createUserArgs(password: string) {
+  get credential(): UserCredentialValueObject {
+    return this._userCredentialValue.values;
+  }
+
+  createUserArgs() {
+    return this.values;
+  }
+
+  createUserCredentialArgs() {
     return {
-      ...this.values,
-      password,
+      ...this.credential,
+      userId: this.values.id,
     };
+  }
+
+  verifyPassword(password: string): boolean {
+    return this._userCredentialValue.verifyPassword(password);
   }
 
 }

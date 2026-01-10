@@ -1,5 +1,5 @@
 import { z } from '@hono/zod-openapi';
-import { createdAt, updatedAt } from '../../schemas/date.schema';
+import { createdAt, updatedAt } from '@api/common/schemas/date.schema';
 
 export const userId = z.string().min(1).openapi({
   example: '123',

@@ -18,6 +18,8 @@
       "@db/*": ["./src/db/*"],
       "@domains/*": ["./src/domains/*"],
       "@scripts/*": ["./scripts/*"],
+      "@api/*": ["./src/api/*"],
+      "@applications/*": ["./src/applications/*"],
     }
   },
   "exclude": ["node_modules"]

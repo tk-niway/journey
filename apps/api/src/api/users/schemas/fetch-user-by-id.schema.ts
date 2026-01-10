@@ -1,5 +1,5 @@
 import { createRoute, z } from '@hono/zod-openapi';
-import { userId, userObjectSchema } from './user-object.schema';
+import { userId, userObjectSchema } from '@api/users/schemas/user-object.schema';
 
 const fetchUserByIdRequest = z.object({
   id: userId

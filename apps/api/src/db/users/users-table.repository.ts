@@ -5,7 +5,8 @@ import { eq } from "drizzle-orm";
 import { DatabaseService } from "@db/database.service";
 import logger from "@lib/logger";
 import { UserRepository } from "@domains/user/repositories/user-repository.interface";
-import { UserTableCreateError } from "@db/users/users-table.error";
+import { UserCredentialCreateError, UserTableCreateError, UserTableCreateTransactionError } from "@db/users/users-table.error";
+import { userCredentialsTable } from "@db/user-credentials/user-credentials-table.schema";
 
 export class UsersTableRepository implements UserRepository {
 
@@ -14,47 +15,50 @@ export class UsersTableRepository implements UserRepository {
   async findById(id: string) {
     const user = await this.dbClient.query.usersTable.findFirst({
       where: eq(usersTable.id, id),
+      with: {
+        userCredentials: true,
+      },
     });
-
-    return user ? UserFactory.createEntity(user) : null;
+    return user ? UserFactory.createUserEntity(user, user.userCredentials) : null;
   }
 
   async findByEmail(email: string) {
     const user = await this.dbClient.query.usersTable.findFirst({
       where: eq(usersTable.email, email),
+      with: {
+        userCredentials: true,
+      },
     });
-
-    return user ? UserFactory.createEntity(user) : null;
+    return user ? UserFactory.createUserEntity(user, user.userCredentials) : null;
   }
 
-  async findMany(): Promise<UserEntity[]> {
-    throw new Error("Method not implemented.");
-  }
-
-  async create(userEntity: UserEntity, password: string): Promise<UserEntity> {
+  async create(userEntity: UserEntity): Promise<UserEntity> {
+    const userArgs = userEntity.createUserArgs();
+    const credentialArgs = userEntity.createUserCredentialArgs();
     try {
-      const result = await this.dbClient.insert(usersTable).values(
-        userEntity.createUserArgs(password),
-      ).returning();
+      return this.dbClient.transaction((db) => {
+        const createUserResult = db.insert(usersTable).values(
+          userArgs,
+        ).returning().all();
 
-      const createdUser = result[0];
+        const createdUser = createUserResult[0];
 
-      if (!createdUser) throw new Error();
+        if (!createdUser) throw new UserTableCreateError();
 
-      return UserFactory.createEntity(createdUser);
+        const createCredentialResult = db.insert(userCredentialsTable).values(
+          credentialArgs,
+        ).returning().all();
 
+        const createdCredential = createCredentialResult[0];
+
+        if (!createdCredential) throw new UserCredentialCreateError();
+
+        return UserFactory.createUserEntity(createdUser, createdCredential);
+      });
     } catch (error) {
-      logger.error(`${UsersTableRepository.name}:create`, error);
-      throw new UserTableCreateError();
+      logger.error(`${UsersTableRepository.name}:create`, `values:${JSON.stringify({ user: userArgs, credential: credentialArgs })}`, error);
+      throw new UserTableCreateTransactionError();
     }
   }
 
-
-  async update(userEntity: UserEntity): Promise<UserEntity> {
-    throw new Error("Method not implemented.");
-  }
-
-  async delete(userEntity: UserEntity): Promise<void> {
-    throw new Error("Method not implemented.");
-  };
 };

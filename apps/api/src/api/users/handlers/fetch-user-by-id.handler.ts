@@ -1,6 +1,6 @@
-import type { FetchUserByIdRequest, FetchUserByIdResponse } from "../schemas/fetch-user-by-id.schema";
-import { UserApplication } from "../../../applications/user/user.application";
-import { UserApiUserNotFoundError } from "../errors/user-api.error";
+import type { FetchUserByIdRequest, FetchUserByIdResponse } from "@api/users/schemas/fetch-user-by-id.schema";
+import { UserApplication } from "@applications/user/user.application";
+import { UserApiUserNotFoundError } from "@api/users/errors/user-api.error";
 
 export const fetchUserByIdHandler = async (params: FetchUserByIdRequest): Promise<FetchUserByIdResponse> => {
   const userApplication = new UserApplication();

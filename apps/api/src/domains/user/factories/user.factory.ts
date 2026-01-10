@@ -1,24 +1,27 @@
 import { UserEntity } from "@domains/user/entities/user.entity";
-import { NewUserType, UserType } from "@domains/user/types/user.type";
-import { UserValue } from "@domains/user/values/user.value";
+import { UserCredentialValueArgs, UserCredentialValue } from "@domains/user/values/user-credential.value";
+import { UserValue, UserValueArgs } from "@domains/user/values/user.value";
 import { nanoid } from "nanoid";
+
+export type NewUserValueArgs = { name: string, email: string, createdAt?: Date, updatedAt?: Date; };
+
+export type NewUserCredentialValueArgs = { userId: string, plainPassword: string, createdAt?: Date, updatedAt?: Date; };
 
 export class UserFactory {
   private constructor() { }
 
-  static createEntity(values: UserType): UserEntity {
-    return new UserEntity(new UserValue(values));
+  static createUserValue(values: UserValueArgs): UserValue {
+    return new UserValue(values);
   }
 
-  static createNewEntity(values: NewUserType): UserEntity {
-    return new UserEntity(this.createNewValue(values));
+  static createUserCredentialValue(values: UserCredentialValueArgs): UserCredentialValue {
+    return new UserCredentialValue(values);
   }
 
-  private static createNewValue(values: NewUserType): UserValue {
+  static createNewUserValue(values: NewUserValueArgs): UserValue {
     const id = nanoid();
-    const createdAt = new Date();
-    const updatedAt = new Date();
-
+    const createdAt = values.createdAt || new Date();
+    const updatedAt = values.updatedAt || new Date();
     return new UserValue({
       id,
       name: values.name,
@@ -27,4 +30,36 @@ export class UserFactory {
       updatedAt,
     });
   }
-}
+
+  static createNewUserCredentialValue(values: NewUserCredentialValueArgs): UserCredentialValue {
+    const id = nanoid();
+    const hashedPassword = UserCredentialValue.hashPassword(values.plainPassword);
+    const createdAt = values.createdAt || new Date();
+    const updatedAt = values.updatedAt || new Date();
+    return new UserCredentialValue({
+      id,
+      userId: values.userId,
+      hashedPassword: hashedPassword,
+      createdAt,
+      updatedAt,
+    });
+  }
+
+  static createUserEntity(values: UserValueArgs, userCredentialValues: UserCredentialValueArgs): UserEntity;
+  static createUserEntity(values: UserValue, userCredentialValues: UserCredentialValue): UserEntity;
+  static createUserEntity(
+    values: UserValue | UserValueArgs,
+    userCredentialValues: UserCredentialValue | UserCredentialValueArgs
+  ): UserEntity {
+    const userValue = values instanceof UserValue
+      ? values
+      : this.createUserValue(values);
+
+    const userCredentialValue = userCredentialValues instanceof UserCredentialValue
+      ? userCredentialValues
+      : this.createUserCredentialValue(userCredentialValues);
+
+    return new UserEntity(userValue, userCredentialValue);
+  }
+
+};

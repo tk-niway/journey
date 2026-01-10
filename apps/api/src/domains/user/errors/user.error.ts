@@ -13,3 +13,19 @@ export class EmailAlreadyExistsError extends Error {
     this.name = this.constructor.name;
   }
 }
+
+export class UserNotFoundError extends Error {
+  public code: string = 'USER_NOT_FOUND';
+  constructor(email: string) {
+    super(`ユーザーが見つかりませんでした email:${email}`);
+    this.name = this.constructor.name;
+  }
+}
+
+export class InvalidPasswordError extends Error {
+  public code: string = 'INVALID_PASSWORD';
+  constructor() {
+    super(`パスワードが間違っています`);
+    this.name = this.constructor.name;
+  }
+}
