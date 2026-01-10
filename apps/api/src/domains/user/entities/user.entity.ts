@@ -1,5 +1,8 @@
-import { UserCredentialValue, UserCredentialValueObject } from "@domains/user/values/user-credential.value";
-import { UserValue, UserValueObject } from "@domains/user/values/user.value";
+import {
+  UserCredentialValue,
+  UserCredentialValueObject,
+} from '@domains/user/values/user-credential.value';
+import { UserValue, UserValueObject } from '@domains/user/values/user.value';
 
 export class UserEntity {
   constructor(values: UserValue, userCredentialValue: UserCredentialValue) {
@@ -32,5 +35,4 @@ export class UserEntity {
   verifyPassword(password: string): boolean {
     return this._userCredentialValue.verifyPassword(password);
   }
-
 }

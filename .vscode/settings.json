@@ -4,9 +4,17 @@
       "mode": "auto"
     }
   ],
-  "cSpell.words": [
-    "libsql",
-    "petstore",
-    "unixepoch"
-  ]
+  "cSpell.words": ["libsql", "petstore", "unixepoch"],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "eslint.validate": ["javascript", "typescript"]
 }

@@ -17,7 +17,9 @@ export class UserCredentialCreateError extends Error {
 export class UserTableCreateTransactionError extends Error {
   public code: string = 'USER_TABLE_CREATE_TRANSACTION_ERROR';
   constructor() {
-    super(`ユーザー作成処理中にエラーが発生しました、しばらく経ってから再度お試しください`);
+    super(
+      `ユーザー作成処理中にエラーが発生しました、しばらく経ってから再度お試しください`
+    );
     this.name = this.constructor.name;
   }
 }

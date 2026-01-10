@@ -13,13 +13,12 @@ export const userName = z.string().openapi({
   example: 'John Doe',
 });
 
-export const userObjectSchema = z
-  .object({
-    id: userId,
-    email: userEmail,
-    name: userName,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-  });
+export const userObjectSchema = z.object({
+  id: userId,
+  email: userEmail,
+  name: userName,
+  createdAt: createdAt,
+  updatedAt: updatedAt,
+});
 
 export type UserObjectSchema = z.infer<typeof userObjectSchema>;

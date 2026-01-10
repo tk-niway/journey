@@ -1,5 +1,5 @@
-import z from "zod";
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import z from 'zod';
+import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 
 // パスワードを安全にハッシュ化するための設定値
 const SCRYPT_KEYLEN = 64;
@@ -15,7 +15,7 @@ export interface UserCredentialValueObject {
   updatedAt: Date;
 }
 
-export interface UserCredentialValueArgs extends UserCredentialValueObject { }
+export type UserCredentialValueArgs = UserCredentialValueObject;
 
 export class UserCredentialValue {
   constructor(values: UserCredentialValueArgs) {
@@ -24,14 +24,19 @@ export class UserCredentialValue {
 
   private _values: UserCredentialValueObject;
 
-  private valueValidator(values: UserCredentialValueArgs): UserCredentialValueObject {
-    return z.object({
-      id: z.string().min(1, 'Id is required'),
-      userId: z.string().min(1, 'User ID is required'),
-      hashedPassword: z.string().min(1, 'Hashed password is required'),
-      createdAt: z.date(),
-      updatedAt: z.date(),
-    }).strip().parse(values);
+  private valueValidator(
+    values: UserCredentialValueArgs
+  ): UserCredentialValueObject {
+    return z
+      .object({
+        id: z.string().min(1, 'Id is required'),
+        userId: z.string().min(1, 'User ID is required'),
+        hashedPassword: z.string().min(1, 'Hashed password is required'),
+        createdAt: z.date(),
+        updatedAt: z.date(),
+      })
+      .strip()
+      .parse(values);
   }
 
   get values(): UserCredentialValueObject {
@@ -47,25 +52,22 @@ export class UserCredentialValue {
     });
 
     const parts = [
-      "scrypt",
+      'scrypt',
       SCRYPT_N.toString(),
       SCRYPT_R.toString(),
       SCRYPT_P.toString(),
-      salt.toString("hex"),
-      derivedKey.toString("hex"),
+      salt.toString('hex'),
+      derivedKey.toString('hex'),
     ];
 
-    return parts.join("$");
+    return parts.join('$');
   }
 
-  verifyPassword(
-    password: string,
-  ): boolean {
-    const [algorithm, nStr, rStr, pStr, saltHex, hashHex] = this.values.hashedPassword.split(
-      "$",
-    );
+  verifyPassword(password: string): boolean {
+    const [algorithm, nStr, rStr, pStr, saltHex, hashHex] =
+      this.values.hashedPassword.split('$');
 
-    if (algorithm !== "scrypt") {
+    if (algorithm !== 'scrypt') {
       // 対応していないフォーマット
       return false;
     }
@@ -74,8 +76,8 @@ export class UserCredentialValue {
       return false;
     }
 
-    const salt = Buffer.from(saltHex, "hex");
-    const storedHash = Buffer.from(hashHex, "hex");
+    const salt = Buffer.from(saltHex, 'hex');
+    const storedHash = Buffer.from(hashHex, 'hex');
 
     const derivedKey = scryptSync(password, salt, storedHash.length, {
       N: Number(nStr),

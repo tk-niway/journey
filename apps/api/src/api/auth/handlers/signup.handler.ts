@@ -1,5 +1,5 @@
-import { AuthApplication } from "@applications/auth/auth.application";
-import { SignupRequest } from "@api/auth/schemas/signup.schema";
+import { AuthApplication } from '@applications/auth/auth.application';
+import { SignupRequest } from '@api/auth/schemas/signup.schema';
 
 export const signupHandler = async (params: SignupRequest) => {
   const authApplication = new AuthApplication();

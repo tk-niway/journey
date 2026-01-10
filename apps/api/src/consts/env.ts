@@ -8,6 +8,9 @@ const envSchema = z.object({
   DB_FILE_NAME: z.string(),
 });
 
-const env = envSchema.parse({ ...process.env, PORT: Number(process.env.PORT || 3000) });
+const env = envSchema.parse({
+  ...process.env,
+  PORT: Number(process.env.PORT || 3000),
+});
 
 export default env;

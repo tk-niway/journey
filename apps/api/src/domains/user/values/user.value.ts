@@ -8,7 +8,7 @@ export interface UserValueObject {
   updatedAt: Date;
 }
 
-export interface UserValueArgs extends UserValueObject { }
+export type UserValueArgs = UserValueObject;
 
 export class UserValue {
   constructor(values: UserValueArgs) {
@@ -18,13 +18,16 @@ export class UserValue {
   private _values: UserValueObject;
 
   private valueValidator(values: UserValueArgs): UserValueObject {
-    return z.object({
-      id: z.string().min(1, 'Id is required'),
-      name: z.string().min(1, 'Name is required'),
-      email: z.email('Invalid email'),
-      createdAt: z.date(),
-      updatedAt: z.date(),
-    }).strip().parse(values);
+    return z
+      .object({
+        id: z.string().min(1, 'Id is required'),
+        name: z.string().min(1, 'Name is required'),
+        email: z.email('Invalid email'),
+        createdAt: z.date(),
+        updatedAt: z.date(),
+      })
+      .strip()
+      .parse(values);
   }
 
   get values(): UserValueObject {

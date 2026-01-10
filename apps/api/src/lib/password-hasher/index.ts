@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 
 // パスワードを安全にハッシュ化するための設定値
 const SCRYPT_KEYLEN = 64;
@@ -25,15 +25,15 @@ export function hashPassword(password: string): HashedPasswordString {
   });
 
   const parts = [
-    "scrypt",
+    'scrypt',
     SCRYPT_N.toString(),
     SCRYPT_R.toString(),
     SCRYPT_P.toString(),
-    salt.toString("hex"),
-    derivedKey.toString("hex"),
+    salt.toString('hex'),
+    derivedKey.toString('hex'),
   ];
 
-  return parts.join("$");
+  return parts.join('$');
 }
 
 /**
@@ -44,13 +44,12 @@ export function hashPassword(password: string): HashedPasswordString {
  */
 export function verifyPassword(
   password: string,
-  hashedPassword: HashedPasswordString,
+  hashedPassword: HashedPasswordString
 ): boolean {
-  const [algorithm, nStr, rStr, pStr, saltHex, hashHex] = hashedPassword.split(
-    "$",
-  );
+  const [algorithm, nStr, rStr, pStr, saltHex, hashHex] =
+    hashedPassword.split('$');
 
-  if (algorithm !== "scrypt") {
+  if (algorithm !== 'scrypt') {
     // 対応していないフォーマット
     return false;
   }
@@ -59,8 +58,8 @@ export function verifyPassword(
     return false;
   }
 
-  const salt = Buffer.from(saltHex, "hex");
-  const storedHash = Buffer.from(hashHex, "hex");
+  const salt = Buffer.from(saltHex, 'hex');
+  const storedHash = Buffer.from(hashHex, 'hex');
 
   const derivedKey = scryptSync(password, salt, storedHash.length, {
     N: Number(nStr),
@@ -75,5 +74,3 @@ export function verifyPassword(
 
   return timingSafeEqual(derivedKey, storedHash);
 }
-
-

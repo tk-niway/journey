@@ -1,4 +1,4 @@
-import { z } from "@hono/zod-openapi";
+import { z } from '@hono/zod-openapi';
 
 export const createdAt = z.date().openapi({
   example: '2021-01-01',

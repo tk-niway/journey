@@ -1,6 +1,6 @@
 export class UserAlreadyExistsError extends Error {
   public code: string = 'USER_ID_ALREADY_EXISTS';
-  constructor(userId: string,) {
+  constructor(userId: string) {
     super(`このユーザーは既に存在します id:${userId}`);
     this.name = this.constructor.name;
   }

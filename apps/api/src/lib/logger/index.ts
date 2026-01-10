@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 type LogMethod = (...args: unknown[]) => void;
 

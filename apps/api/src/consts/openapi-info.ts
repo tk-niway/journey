@@ -4,4 +4,4 @@ export const OPENAPI_INFO = {
     title: 'API',
     version: '1.0.0',
   },
-}
+};

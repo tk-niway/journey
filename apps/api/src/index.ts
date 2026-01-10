@@ -7,15 +7,18 @@ import logger from '@lib/logger';
 // スキーマファイルを生成
 generateOpenApiYml();
 
-logger.info("Server is starting...");
+logger.info('Server is starting...');
 
-const server = serve({
-  fetch: api.fetch,
-  hostname: env.HOST,
-  port: env.PORT
-}, (info) => {
-  logger.info(`Server is running on http://${env.HOST}:${info.port}`);
-});
+const server = serve(
+  {
+    fetch: api.fetch,
+    hostname: env.HOST,
+    port: env.PORT,
+  },
+  (info) => {
+    logger.info(`Server is running on http://${env.HOST}:${info.port}`);
+  }
+);
 
 // shutdown
 const shutdown = (signal: string) => {
