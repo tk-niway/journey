@@ -12,6 +12,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
+    "db:push:gen": "drizzle-kit push && npm run db:generate",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "format:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json}\"",
     "lint:check": "eslint \"src/**/*.{ts,tsx}\"",
