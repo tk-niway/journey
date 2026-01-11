@@ -414,3 +414,59 @@ const responseSchema = z.object({
   data: someObjectSchema,
 });
 ```
+
+---
+
+## 作業完了チェックリスト
+
+すべての作業が完了したら、以下のチェックを実行してください：
+
+### 1. テストの実行
+
+```bash
+pnpm test
+```
+
+すべてのテストがパスすることを確認。
+
+### 2. Lintチェック
+
+```bash
+pnpm lint:check
+```
+
+エラーがないことを確認。エラーがある場合：
+
+```bash
+pnpm lint:fix
+```
+
+### 3. フォーマットチェック
+
+```bash
+pnpm format:check
+```
+
+エラーがないことを確認。エラーがある場合：
+
+```bash
+pnpm format:fix
+```
+
+### 一括チェック
+
+上記を一括で実行：
+
+```bash
+pnpm check:all
+```
+
+### チェック項目まとめ
+
+| チェック     | コマンド            | 自動修正          |
+| ------------ | ------------------- | ----------------- |
+| テスト       | `pnpm test`         | -                 |
+| Lint         | `pnpm lint:check`   | `pnpm lint:fix`   |
+| フォーマット | `pnpm format:check` | `pnpm format:fix` |
+| 型チェック   | `pnpm type:check`   | -                 |
+| 全チェック   | `pnpm check:all`    | -                 |
