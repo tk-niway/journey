@@ -1,9 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import app from '@api/index';
 import { cleanupAllTables } from '@db/lib/helpers/database.test-helper';
-import { databaseService } from '@db/database.service';
-import { usersTable } from '@db/schemas/users-table.schema';
-import { eq } from 'drizzle-orm';
+import { testRepository } from '@db/repositories/test/test.repository';
 
 describe('POST /api/auth/signup - E2E', () => {
   beforeEach(async () => {
@@ -38,9 +36,9 @@ describe('POST /api/auth/signup - E2E', () => {
     expect(body.updatedAt).toBeDefined();
 
     // DBにユーザーが作成されていることを確認
-    const userInDb = await databaseService.query.usersTable.findFirst({
-      where: eq(usersTable.email, validSignupRequest.email),
-    });
+    const userInDb = await testRepository.findUserByEmail(
+      validSignupRequest.email
+    );
     expect(userInDb).toBeDefined();
     expect(userInDb?.id).toBe(body.id);
     expect(userInDb?.name).toBe(validSignupRequest.name);

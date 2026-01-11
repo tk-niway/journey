@@ -2,6 +2,10 @@ import { databaseService } from '@db/database.service';
 import { usersTable } from '@db/schemas/users-table.schema';
 import { userCredentialsTable } from '@db/schemas/user-credentials-table.schema';
 import { sql } from 'drizzle-orm';
+import { UserTestFactory } from '@domains/user/factories/user.test-factory';
+import { testRepository } from '@db/repositories/test/test.repository';
+import { UserEntity } from '@domains/user/entities/user.entity';
+import { faker } from '@faker-js/faker';
 
 // 全テーブルのリスト（新しいテーブルを追加したらここに追加するだけ）
 const allTables = [userCredentialsTable, usersTable];
@@ -19,4 +23,20 @@ export const cleanupAllTables = async () => {
   }
 
   databaseService.run(sql`PRAGMA foreign_keys = ON`);
+};
+
+/**
+ * テスト用ユーザーをDBに作成するヘルパー関数
+ */
+export const createTestUser = async (args: {
+  email: string;
+  password: string;
+  name?: string;
+}): Promise<UserEntity> => {
+  const userEntity = UserTestFactory.createUserEntity(
+    { email: args.email, name: args.name ?? faker.person.fullName() },
+    { plainPassword: args.password }
+  );
+  await testRepository.createUser(userEntity);
+  return userEntity;
 };

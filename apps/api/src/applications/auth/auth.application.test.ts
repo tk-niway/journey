@@ -1,15 +1,12 @@
 import { AuthApplication } from './auth.application';
 import { cleanupAllTables } from '@db/lib/helpers/database.test-helper';
-import { databaseService } from '@db/database.service';
 import {
   EmailAlreadyExistsError,
   UserNotFoundError,
   InvalidPasswordError,
 } from '@domains/user/errors/user.error';
 import { UserTestFactory } from '@domains/user/factories/user.test-factory';
-import { usersTable } from '@db/schemas/users-table.schema';
-import { eq } from 'drizzle-orm';
-import { userCredentialsTable } from '@db/schemas/user-credentials-table.schema';
+import { testRepository } from '@db/repositories/test/test.repository';
 
 describe('AuthApplication', () => {
   let authApplication: AuthApplication;
@@ -37,9 +34,7 @@ describe('AuthApplication', () => {
       expect(result.values.id).toBeDefined();
 
       // DBから取得して登録されていることを確認
-      const userInDb = await databaseService.query.usersTable.findFirst({
-        where: eq(usersTable.email, validInput.email),
-      });
+      const userInDb = await testRepository.findUserByEmail(validInput.email);
       expect(userInDb).toBeDefined();
       expect(userInDb?.id).toBe(result.values.id);
       expect(userInDb?.name).toBe(validInput.name);
@@ -72,12 +67,7 @@ describe('AuthApplication', () => {
         { email: testEmail },
         { plainPassword: testPassword }
       );
-      await databaseService.insert(usersTable).values({
-        ...userEntity.values,
-      });
-      await databaseService.insert(userCredentialsTable).values({
-        ...userEntity.credential,
-      });
+      await testRepository.createUser(userEntity);
 
       // 同じemail/passwordでloginを実行
       const result = await authApplication.login(testEmail, testPassword);
@@ -98,7 +88,6 @@ describe('AuthApplication', () => {
     });
 
     it('パスワードが間違っている場合InvalidPasswordErrorをスロー', async () => {
-      // UserTestFactoryでユーザーを作成し、DBに登録
       const testPassword = 'password123';
       const testEmail = 'test@example.com';
       // UserTestFactoryでユーザーを作成し、DBに登録
@@ -106,12 +95,7 @@ describe('AuthApplication', () => {
         { email: testEmail },
         { plainPassword: testPassword }
       );
-      await databaseService.insert(usersTable).values({
-        ...userEntity.values,
-      });
-      await databaseService.insert(userCredentialsTable).values({
-        ...userEntity.credential,
-      });
+      await testRepository.createUser(userEntity);
 
       // 間違ったパスワードでloginを実行
       await expect(
