@@ -12,7 +12,7 @@ const meResponse = userObjectSchema;
 type MeResponse = z.infer<typeof meResponse>;
 
 const meRoute = createRoute({
-  path: '/users/me',
+  path: '/me',
   method: 'post',
   request: {
     body: {

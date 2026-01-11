@@ -14,7 +14,7 @@ const signupResponse = userObjectSchema;
 type SignupResponse = z.infer<typeof signupResponse>;
 
 const signupRoute = createRoute({
-  path: '/auth/signup',
+  path: '/signup',
   method: 'post',
   request: {
     body: {

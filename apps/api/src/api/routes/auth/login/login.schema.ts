@@ -16,7 +16,7 @@ const loginResponse = z.object({
 type LoginResponse = z.infer<typeof loginResponse>;
 
 const loginRoute = createRoute({
-  path: '/auth/login',
+  path: '/login',
   method: 'post',
   request: {
     body: {

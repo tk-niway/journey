@@ -16,7 +16,7 @@ export type AccessTokenPayload = {
 };
 
 // 認証不要のパスリスト
-const publicPaths = ['/api/auth/signup', '/api/auth/login'];
+const publicPaths = ['/api/health', '/api/auth/signup', '/api/auth/login'];
 
 const COOKIE_NAME = 'access_token';
 

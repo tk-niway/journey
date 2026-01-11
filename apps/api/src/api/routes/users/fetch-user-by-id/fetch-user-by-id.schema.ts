@@ -21,7 +21,7 @@ const fetchUserByIdResponse = userObjectSchema;
 type FetchUserByIdResponse = z.infer<typeof fetchUserByIdResponse>;
 
 const fetchUserByIdRoute = createRoute({
-  path: '/users/{id}',
+  path: '/{id}',
   method: 'get',
   request: {
     params: fetchUserByIdRequest,
