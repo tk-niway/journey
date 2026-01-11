@@ -1,135 +1,97 @@
-# Turborepo starter
+# Journey
 
-This Turborepo starter is maintained by the Turborepo core team.
+Turborepo を使用したモノレポ構成のフルスタックアプリケーション。
 
-## Using this example
+## 構成
 
-Run the following command:
+| パッケージ | 役割           | 説明                 | 技術                   |
+| ---------- | -------------- | -------------------- | ---------------------- |
+| `apps/api` | バックエンド   | REST API サーバー    | Hono, Drizzle ORM, Zod |
+| `apps/web` | フロントエンド | Web アプリケーション | React Router, Vite     |
+| `shared/`  | 共有           | 共有リソース         | OpenAPI仕様書          |
 
-```sh
-npx create-turbo@latest
+## セットアップ
+
+### 1. 依存関係のインストール
+
+```bash
+pnpm install
 ```
 
-## What's inside?
+### 2. 環境変数の設定
 
-This Turborepo includes the following packages/apps:
-
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+```bash
+cp apps/api/env.example apps/api/.env
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+### 3. データベースのセットアップ
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+```bash
+pnpm --filter api db:migrate
 ```
 
-### Develop
+### 4. 開発サーバーの起動
 
-To develop all apps and packages, run the following command:
+```bash
+# 全アプリを起動
+pnpm dev
 
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+# または個別に起動
+pnpm --filter api dev   # API: http://localhost:3000
+pnpm --filter web dev   # Web: http://localhost:5173
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## コマンド
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+### 開発
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+| コマンド     | 説明                       |
+| ------------ | -------------------------- |
+| `pnpm dev`   | 全アプリの開発サーバー起動 |
+| `pnpm build` | 全アプリのビルド           |
+| `pnpm lint`  | 全アプリのLint             |
 
-### Remote Caching
+### 特定アプリの操作
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+```bash
+# APIのコマンド
+pnpm --filter api dev
+pnpm --filter api test
+pnpm --filter api db:migrate
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+# Webのコマンド
+pnpm --filter web dev
+pnpm --filter web build
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Turboを使った操作
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+```bash
+turbo dev --filter=api
+turbo build --filter=web
 ```
 
-## Useful Links
+## ディレクトリ構造
 
-Learn more about the power of Turborepo:
+```
+/
+├── apps/
+│   ├── api/           # REST API
+│   │   ├── src/
+│   │   ├── drizzle/   # マイグレーションファイル
+│   │   └── AGENTS.md  # AI向けドキュメント
+│   └── web/           # Webフロントエンド
+│       └── app/
+├── shared/
+│   └── openapi.yml    # OpenAPI仕様書
+├── turbo.json         # Turborepo設定
+└── pnpm-workspace.yaml
+```
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+## ドキュメント
+
+| ファイル             | 説明                       |
+| -------------------- | -------------------------- |
+| `AGENTS.md`          | AIエージェント向け全体概要 |
+| `apps/api/AGENTS.md` | API開発の詳細規約          |
+| `apps/api/docs/`     | APIの詳細ドキュメント      |
