@@ -9,18 +9,19 @@ import {
   notFoundHandler,
 } from '@api/middlewares/error.middleware';
 import { verifyAccessToken } from '@api/middlewares/access-token.middleware';
+import healthRouter from '@api/routes/health';
 import { apiRoutes } from '@api/routes';
 
 const app = new OpenAPIHono();
+
+const API_PREFIX = 'api';
 
 app.use(
   '*',
   honoLogger((message) => logger.info(message))
 );
 
-app.get('/health', (c) => {
-  return c.text('Hello Hono!');
-});
+app.route('/', healthRouter);
 
 app.get(
   '/docs',
@@ -31,7 +32,6 @@ app.get(
 
 app.doc('/schema', OPENAPI_INFO);
 
-const API_PREFIX = 'api';
 app.use(
   `${API_PREFIX}/*`,
   cors({
@@ -44,7 +44,6 @@ app.use(
 );
 app.use(`${API_PREFIX}/*`, verifyAccessToken);
 app.route(API_PREFIX, apiRoutes);
-
 app.onError(errorHandler);
 app.notFound(notFoundHandler);
 
