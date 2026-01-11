@@ -12,7 +12,7 @@ import {
 } from '@domains/user/errors/user.error';
 import { ErrorResponse } from '@api/schemas/error.schema';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
-import { ApiError } from '@api/errors';
+import { ApiError } from '@api/lib/errors/exceptions';
 import { DomainErrorAbstract } from '@lib/errors/domain-error.abstract';
 import { DbErrorAbstract } from '@db/lib/errors/db-error.abstract';
 

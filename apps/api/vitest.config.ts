@@ -5,7 +5,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    include: ['src/**/*.test.ts', 'src/**/*.spec.ts'],
+    include: ['src/**/*.test.ts', 'src/**/*.spec.ts', 'src/**/*.e2e.ts'],
+    env: {
+      NODE_ENV: 'test',
+      DB_FILE_NAME: ':memory:',
+      AUTH_SECRET: 'test-secret',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],

@@ -8,14 +8,14 @@ import {
   InvalidTokenApiError,
   InvalidUserApiError,
   NotFoundTokenApiError,
-} from '@api/errors';
+} from '@api/lib/errors/exceptions';
 
 export type AccessTokenPayload = {
   sub: string;
   exp: number;
 };
 
-// 認証不要のパスリスト
+// 認証不要のパス
 const publicPaths = ['/api/health', '/api/auth/signup', '/api/auth/login'];
 
 const COOKIE_NAME = 'access_token';

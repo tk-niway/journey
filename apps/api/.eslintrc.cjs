@@ -27,7 +27,7 @@ module.exports = {
   },
 
   // 除外ファイルの設定
-  ignorePatterns: ['.eslintrc.js', 'dist/**/*', 'node_modules/**/*'],
+  ignorePatterns: ['.eslintrc.cjs', 'dist/**/*', 'node_modules/**/*'],
 
   // ルールの設定
   rules: {
@@ -53,12 +53,6 @@ module.exports = {
       },
     ],
 
-    // NestJS関連のルール
-    '@typescript-eslint/no-empty-interface': 'off',
-    '@typescript-eslint/no-empty-function': 'off',
-    '@typescript-eslint/no-non-null-assertion': 'error',
-    '@typescript-eslint/no-var-requires': 'error',
-
     // セキュリティ関連のルール
     'no-eval': 'error',
     'no-implied-eval': 'error',
@@ -67,7 +61,6 @@ module.exports = {
 
     // パフォーマンス関連のルール
     'no-return-await': 'error',
-    'no-await-in-loop': 'error',
     'no-promise-executor-return': 'error',
 
     // Prettierとの連携

@@ -8,13 +8,13 @@ import { loginRoute } from '@api/routes/auth/login/login.schema';
 const app = new OpenAPIHono();
 
 app.openapi(signupRoute, async (c) => {
-  const body = await c.req.json();
+  const body = c.req.valid('json');
   const user = await signupHandler(body);
   return c.json(user);
 });
 
 app.openapi(loginRoute, async (c) => {
-  const body = await c.req.json();
+  const body = c.req.valid('json');
   const user = await loginHandler(body);
   const accessToken = await createAccessToken(c, user.id);
   return c.json({ accessToken, user });

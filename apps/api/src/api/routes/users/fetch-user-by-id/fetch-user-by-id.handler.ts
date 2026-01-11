@@ -3,7 +3,7 @@ import type {
   FetchUserByIdResponse,
 } from '@api/routes/users/fetch-user-by-id/fetch-user-by-id.schema';
 import { UserApplication } from '@applications/user/user.application';
-import { UserNotFoundApiError } from '@api/errors';
+import { UserNotFoundApiError } from '@api/lib/errors/exceptions';
 
 export const fetchUserByIdHandler = async (
   params: FetchUserByIdRequest
