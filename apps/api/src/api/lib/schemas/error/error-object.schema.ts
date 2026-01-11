@@ -1,6 +1,6 @@
 import { z } from '@hono/zod-openapi';
 
-export const errorSchema = z.object({
+export const errorObjectSchema = z.object({
   error: z.object({
     code: z.string().openapi({
       example: 'USER_ID_ALREADY_EXISTS',
@@ -11,4 +11,4 @@ export const errorSchema = z.object({
   }),
 });
 
-export type ErrorResponse = z.infer<typeof errorSchema>;
+export type ErrorObject = z.infer<typeof errorObjectSchema>;

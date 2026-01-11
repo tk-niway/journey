@@ -1,5 +1,5 @@
+import { userObjectSchema } from '@api/lib/schemas/user/user-object.schema';
 import { createRoute, z } from '@hono/zod-openapi';
-import { userObjectSchema } from '@api/routes/users/schemas/user-object.schema';
 
 const signupRequest = z.object({
   name: z.string().min(2, 'Name is required'),

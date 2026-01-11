@@ -10,11 +10,11 @@ import {
   EmailAlreadyExistsError,
   UserNotFoundError,
 } from '@domains/user/errors/user.error';
-import { ErrorResponse } from '@api/schemas/error.schema';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import { ApiError } from '@api/lib/errors/exceptions';
 import { DomainErrorAbstract } from '@lib/errors/domain-error.abstract';
 import { DbErrorAbstract } from '@db/lib/errors/db-error.abstract';
+import { ErrorObject } from '@api/lib/schemas/error/error-object.schema';
 
 // DomainErrorAbstractのエラークラス名とステータスコードのマッピング
 const ERROR_STATUS_MAP = new Map<string, ContentfulStatusCode>([
@@ -26,7 +26,7 @@ const ERROR_STATUS_MAP = new Map<string, ContentfulStatusCode>([
   [UserNotFoundError.name, 404],
 ]);
 
-const createErrorResponse = (message: string, code: string): ErrorResponse => {
+const createErrorResponse = (message: string, code: string): ErrorObject => {
   return {
     error: {
       message,

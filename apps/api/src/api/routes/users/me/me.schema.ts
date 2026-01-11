@@ -1,4 +1,4 @@
-import { userObjectSchema } from '@api/routes/users/schemas/user-object.schema';
+import { userObjectSchema } from '@api/lib/schemas/user/user-object.schema';
 import { createRoute, z } from '@hono/zod-openapi';
 
 const meRequest = z.object({

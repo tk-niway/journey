@@ -30,9 +30,11 @@ paths:
                     example: '123'
                   email:
                     type: string
+                    format: email
                     example: john.doe@example.com
                   name:
                     type: string
+                    minLength: 1
                     example: John Doe
                   createdAt:
                     type: string
@@ -74,9 +76,11 @@ paths:
                     example: '123'
                   email:
                     type: string
+                    format: email
                     example: john.doe@example.com
                   name:
                     type: string
+                    minLength: 1
                     example: John Doe
                   createdAt:
                     type: string
@@ -127,9 +131,11 @@ paths:
                     example: '123'
                   email:
                     type: string
+                    format: email
                     example: john.doe@example.com
                   name:
                     type: string
+                    minLength: 1
                     example: John Doe
                   createdAt:
                     type: string
@@ -181,9 +187,11 @@ paths:
                         example: '123'
                       email:
                         type: string
+                        format: email
                         example: john.doe@example.com
                       name:
                         type: string
+                        minLength: 1
                         example: John Doe
                       createdAt:
                         type: string

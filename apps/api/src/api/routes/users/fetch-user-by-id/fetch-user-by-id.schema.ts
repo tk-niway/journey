@@ -2,7 +2,7 @@ import { createRoute, z } from '@hono/zod-openapi';
 import {
   userId,
   userObjectSchema,
-} from '@api/routes/users/schemas/user-object.schema';
+} from '@api/lib/schemas/user/user-object.schema';
 
 const fetchUserByIdRequest = z.object({
   id: userId.openapi({
