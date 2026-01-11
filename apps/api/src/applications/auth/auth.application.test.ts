@@ -1,6 +1,5 @@
 import { AuthApplication } from './auth.application';
 import { cleanupAllTables } from '@db/lib/helpers/database.test-helper';
-import { UsersTableRepository } from '@db/repositories/users/users-table.repository';
 import { databaseService } from '@db/database.service';
 import {
   EmailAlreadyExistsError,
@@ -8,16 +7,16 @@ import {
   InvalidPasswordError,
 } from '@domains/user/errors/user.error';
 import { UserTestFactory } from '@domains/user/factories/user.test-factory';
-import { UserCredentialValue } from '@domains/user/values/user-credential.value';
+import { usersTable } from '@db/schemas/users-table.schema';
+import { eq } from 'drizzle-orm';
+import { userCredentialsTable } from '@db/schemas/user-credentials-table.schema';
 
 describe('AuthApplication', () => {
   let authApplication: AuthApplication;
-  let usersTableRepository: UsersTableRepository;
 
   beforeEach(async () => {
     await cleanupAllTables();
     authApplication = new AuthApplication();
-    usersTableRepository = new UsersTableRepository(databaseService);
   });
 
   describe('signup', () => {
@@ -38,11 +37,13 @@ describe('AuthApplication', () => {
       expect(result.values.id).toBeDefined();
 
       // DBから取得して登録されていることを確認
-      const userInDb = await usersTableRepository.findByEmail(validInput.email);
+      const userInDb = await databaseService.query.usersTable.findFirst({
+        where: eq(usersTable.email, validInput.email),
+      });
       expect(userInDb).toBeDefined();
-      expect(userInDb?.values.id).toBe(result.values.id);
-      expect(userInDb?.values.name).toBe(validInput.name);
-      expect(userInDb?.values.email).toBe(validInput.email);
+      expect(userInDb?.id).toBe(result.values.id);
+      expect(userInDb?.name).toBe(validInput.name);
+      expect(userInDb?.email).toBe(validInput.email);
     });
 
     it('同じメールアドレスで2回サインアップするとEmailAlreadyExistsErrorをスロー', async () => {
@@ -63,17 +64,20 @@ describe('AuthApplication', () => {
   });
 
   describe('login', () => {
-    const testPassword = 'testPassword123';
-    const testEmail = 'login-test@example.com';
-
     it('登録済みユーザーが正しいパスワードでログインできる', async () => {
+      const testPassword = 'password123';
+      const testEmail = 'test@example.com';
       // UserTestFactoryでユーザーを作成し、DBに登録
-      const hashedPassword = UserCredentialValue.hashPassword(testPassword);
       const userEntity = UserTestFactory.createUserEntity(
         { email: testEmail },
-        { hashedPassword }
+        { plainPassword: testPassword }
       );
-      await usersTableRepository.create(userEntity);
+      await databaseService.insert(usersTable).values({
+        ...userEntity.values,
+      });
+      await databaseService.insert(userCredentialsTable).values({
+        ...userEntity.credential,
+      });
 
       // 同じemail/passwordでloginを実行
       const result = await authApplication.login(testEmail, testPassword);
@@ -95,12 +99,19 @@ describe('AuthApplication', () => {
 
     it('パスワードが間違っている場合InvalidPasswordErrorをスロー', async () => {
       // UserTestFactoryでユーザーを作成し、DBに登録
-      const hashedPassword = UserCredentialValue.hashPassword(testPassword);
+      const testPassword = 'password123';
+      const testEmail = 'test@example.com';
+      // UserTestFactoryでユーザーを作成し、DBに登録
       const userEntity = UserTestFactory.createUserEntity(
         { email: testEmail },
-        { hashedPassword }
+        { plainPassword: testPassword }
       );
-      await usersTableRepository.create(userEntity);
+      await databaseService.insert(usersTable).values({
+        ...userEntity.values,
+      });
+      await databaseService.insert(userCredentialsTable).values({
+        ...userEntity.credential,
+      });
 
       // 間違ったパスワードでloginを実行
       await expect(

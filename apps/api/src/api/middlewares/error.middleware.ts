@@ -9,6 +9,7 @@ import {
   UserAlreadyExistsError,
   EmailAlreadyExistsError,
   UserNotFoundError,
+  InvalidPasswordError,
 } from '@domains/user/errors/user.error';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
 import { ApiError } from '@api/lib/errors/exceptions';
@@ -24,6 +25,7 @@ const ERROR_STATUS_MAP = new Map<string, ContentfulStatusCode>([
   [UserCredentialCreateDbError.name, 500],
   [UserCreateTransactionDbError.name, 500],
   [UserNotFoundError.name, 404],
+  [InvalidPasswordError.name, 401],
 ]);
 
 const createErrorResponse = (message: string, code: string): ErrorObject => {

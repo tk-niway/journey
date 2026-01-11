@@ -2,13 +2,17 @@ import { faker } from '@faker-js/faker';
 import { nanoid } from 'nanoid';
 import { UserEntity } from '@domains/user/entities/user.entity';
 import {
-  UserCredentialValueArgs,
   UserCredentialValue,
+  UserCredentialValueArgs,
 } from '@domains/user/values/user-credential.value';
-import { UserValueArgs, UserValue } from '@domains/user/values/user.value';
+import { UserValue, UserValueArgs } from '@domains/user/values/user.value';
+import {
+  NewUserValueArgs,
+  NewUserCredentialValueArgs,
+} from '@domains/user/factories/user.factory';
 
 export class UserTestFactory {
-  static createUserValue(args: Partial<UserValueArgs> = {}): UserValue {
+  static createUserValue(args: Partial<NewUserValueArgs> = {}): UserValue {
     const now = new Date();
     const fullArgs: UserValueArgs = {
       id: args.id ?? nanoid(),
@@ -21,15 +25,16 @@ export class UserTestFactory {
   }
 
   static createUserCredentialValue(
-    args: Partial<UserCredentialValueArgs> = {}
+    args: Partial<NewUserCredentialValueArgs> = {}
   ): UserCredentialValue {
     const now = new Date();
+    const hashedPassword = UserCredentialValue.hashPassword(
+      args.plainPassword ?? faker.internet.password()
+    );
     const fullArgs: UserCredentialValueArgs = {
       id: args.id ?? nanoid(),
       userId: args.userId ?? nanoid(),
-      hashedPassword:
-        args.hashedPassword ??
-        UserCredentialValue.hashPassword(faker.internet.password()),
+      hashedPassword: hashedPassword,
       createdAt: args.createdAt ?? now,
       updatedAt: args.updatedAt ?? now,
     };
@@ -37,8 +42,8 @@ export class UserTestFactory {
   }
 
   static createUserEntity(
-    userValueArgs: Partial<UserValueArgs> = {},
-    userCredentialValueArgs: Partial<UserCredentialValueArgs> = {}
+    userValueArgs: Partial<NewUserValueArgs> = {},
+    userCredentialValueArgs: Partial<NewUserCredentialValueArgs> = {}
   ): UserEntity {
     const userValue = this.createUserValue(userValueArgs);
     const userCredentialValue = this.createUserCredentialValue({

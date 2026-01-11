@@ -7,6 +7,7 @@ import { UserValue, UserValueArgs } from '@domains/user/values/user.value';
 import { nanoid } from 'nanoid';
 
 export type NewUserValueArgs = {
+  id?: string;
   name: string;
   email: string;
   createdAt?: Date;
@@ -14,6 +15,7 @@ export type NewUserValueArgs = {
 };
 
 export type NewUserCredentialValueArgs = {
+  id?: string;
   userId: string;
   plainPassword: string;
   createdAt?: Date;
@@ -34,7 +36,7 @@ export class UserFactory {
   }
 
   static createNewUserValue(values: NewUserValueArgs): UserValue {
-    const id = nanoid();
+    const id = values.id || nanoid();
     const createdAt = values.createdAt || new Date();
     const updatedAt = values.updatedAt || new Date();
     return new UserValue({
@@ -49,7 +51,7 @@ export class UserFactory {
   static createNewUserCredentialValue(
     values: NewUserCredentialValueArgs
   ): UserCredentialValue {
-    const id = nanoid();
+    const id = values.id || nanoid();
     const hashedPassword = UserCredentialValue.hashPassword(
       values.plainPassword
     );

@@ -17,6 +17,8 @@ export default defineConfig({
       include: ['src/**/*.ts'],
       exclude: ['src/**/*.schema.ts', 'src/index.ts'],
     },
+    isolate: false,
+    maxWorkers: 1,
   },
   resolve: {
     alias: {
