@@ -18,7 +18,8 @@
       "@shared/*": ["../../shared/*"],
       "@app/*": ["./app/*"],
       "@public/*": ["./public/*"],
-      "@generated/*": ["./app/generated/*"]
+      "@generated/*": ["./app/generated/*"],
+      "@components/*": ["./app/components/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

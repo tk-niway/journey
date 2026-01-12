@@ -1,4 +1,4 @@
-import type { Route } from "./+types/home";
+import type { Route } from "./+types/home2";
 import { Welcome } from "../welcome/welcome";
 import { getApiUsersId } from "@generated/web-api/default/default";
 

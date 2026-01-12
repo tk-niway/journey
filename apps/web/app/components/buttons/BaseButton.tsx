@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes } from "react";
 
-export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+export interface BaseButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "danger";
   isLoading?: boolean;
   children: React.ReactNode;
@@ -9,14 +9,14 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 /**
  * 汎用的なボタンコンポーネント
  */
-export function Button({
+export function BaseButton({
   variant = "primary",
   isLoading = false,
   disabled,
   children,
   className = "",
   ...props
-}: ButtonProps) {
+}: BaseButtonProps) {
   const baseStyles =
     "group relative flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
