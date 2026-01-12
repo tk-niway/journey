@@ -121,11 +121,44 @@ APIルートではスキーマ定義とビジネスロジック呼び出しを�
 - 生成時にZodでバリデーション
 - getterで値を公開
 
-### 5. ドメインエラーパターン
+### 5. エラーハンドリングパターン
 
-- 抽象クラス（DomainErrorAbstract）を継承
-- エラーコード（code）を持つ
-- 日本語メッセージ
+3種類のエラー抽象クラスを使い分ける：
+
+| 抽象クラス | 用途 | 配置場所 |
+|------------|------|----------|
+| `DomainErrorAbstract` | ドメイン層のビジネスエラー | `domains/{domain}/errors/` |
+| `DbErrorAbstract` | DB層のエラー | `db/repositories/{domain}/` |
+| `ApiError` | API層のエラー（認証等） | `api/lib/errors/` |
+
+#### message / code / statusCode の役割
+
+| 項目 | 役割 | 対象 |
+|------|------|------|
+| `message` | エンドユーザーに表示可能なメッセージ | ユーザー |
+| `code` | フロントエンド開発者が内部処理を判断するためのコード | FE開発者 |
+| `statusCode` | HTTPステータスコード | システム |
+
+**使い分けの例**: 同じ404でも `USER_NOT_FOUND` と `USER_DEACTIVE` では処理が異なる場合がある。FE側で処理を分岐させたい時に `code` を使って判断する。
+
+#### エラーコードの命名規則
+
+- `ErrorCode` enumは `shared/error-code.const.ts` で定義
+- バックエンド・フロントエンドで共有
+- **キー名のprefixはドメイン名にする**（例: `USER_NOT_FOUND`, `TOKEN_EXPIRED`）
+- 必要に応じて追加可能
+
+#### codeを明記するタイミング
+
+- `ApiError`: 常に `code` を持つ（必須）
+- `DomainError` / `DbError`: 通常は `undefined`（ERROR_STATUS_MAPで設定）
+  - 例外: リクエストクライアント側に内部処理的なエラーを伝えたい時は明記可能
+
+#### エラー→HTTPステータス変換
+
+- `DomainError` / `DbError` は `ERROR_STATUS_MAP` でステータスコードに変換
+- `ApiError` は自身で `statusCode` を持つ
+- マッピングは `api/lib/errors/error-status.helper.ts` に定義
 
 ## テスト規約
 

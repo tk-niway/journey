@@ -127,34 +127,153 @@ app.openapi(loginRoute, async (c) => {
 export default app;
 ```
 
-### ドメインエラー
+### エラーハンドリング
+
+エラーは3種類の抽象クラスを使い分ける。
+
+#### message / code / statusCode の役割
+
+| 項目         | 役割                                                 | 対象     |
+| ------------ | ---------------------------------------------------- | -------- |
+| `message`    | エンドユーザーに表示可能なメッセージ                 | ユーザー |
+| `code`       | フロントエンド開発者が内部処理を判断するためのコード | FE開発者 |
+| `statusCode` | HTTPステータスコード                                 | システム |
+
+**使い分けの例**: 同じ404でも `USER_NOT_FOUND` と `USER_DEACTIVE` では処理が異なる場合がある。FE側で処理を分岐させたい時に `code` を使って判断する。
+
+#### エラーコード定義
+
+- 定義場所: `shared/error-code.const.ts`
+- バックエンド・フロントエンドで共有
+- **キー名のprefixはドメイン名にする**（例: `USER_NOT_FOUND`, `TOKEN_EXPIRED`）
+- 必要に応じて追加可能
+
+具体的な値は `shared/error-code.const.ts` を参照してください。
+
+#### ドメインエラー（domains/{domain}/errors/）
+
+- `message`: エンドユーザーに読まれても良い内容にする
+- `code`: 通常は `undefined`（ERROR_STATUS_MAPで設定）
+  - 例外: リクエストクライアント側に内部処理的なエラーを伝えたい時は明記可能
 
 ```typescript
 import { DomainErrorAbstract } from '@lib/errors/domain-error.abstract';
 
 export class UserNotFoundError extends DomainErrorAbstract {
-  public code: string = 'USER_NOT_FOUND';
+  code = undefined; // ERROR_STATUS_MAPで設定
   constructor(email: string) {
-    super(`ユーザーが見つかりませんでした email:${email}`);
+    // messageはエンドユーザーに表示可能な内容にする
+    super(`ユーザーが見つかりませんでした`);
     this.name = this.constructor.name;
   }
 }
 
 export class EmailAlreadyExistsError extends DomainErrorAbstract {
-  public code: string = 'EMAIL_ALREADY_EXISTS';
+  code = undefined;
   constructor(email: string) {
-    super(`このメールアドレスは既に登録されています email:${email}`);
+    super(`このメールアドレスは既に登録されています`);
+    this.name = this.constructor.name;
+  }
+}
+```
+
+#### DBエラー（db/repositories/{domain}/）
+
+```typescript
+import { DbErrorAbstract } from '@lib/errors/db-error.abstract';
+
+export class UserCreateDbError extends DbErrorAbstract {
+  code = undefined;
+  constructor() {
+    super(`ユーザー作成に失敗しました`);
+    this.name = this.constructor.name;
+  }
+}
+```
+
+#### API層エラー（api/lib/errors/）
+
+API層で直接throwするエラー（認証等）：
+
+```typescript
+import { ApiError } from '@lib/errors/api-error.abstract';
+import { ErrorCode } from '@shared/error-code.const';
+import { ContentfulStatusCode } from '@lib/errors/http-status.const';
+
+export class InvalidTokenApiError extends ApiError {
+  public code: ErrorCode = ErrorCode.TOKEN_INVALID;
+  public statusCode: ContentfulStatusCode = 401;
+  constructor() {
+    super('アクセストークンが無効です');
     this.name = this.constructor.name;
   }
 }
 
-export class InvalidPasswordError extends DomainErrorAbstract {
-  public code: string = 'INVALID_PASSWORD';
-  constructor() {
-    super(`パスワードが間違っています`);
+export class UserNotFoundApiError extends ApiError {
+  public code: ErrorCode = ErrorCode.USER_NOT_FOUND;
+  public statusCode: ContentfulStatusCode = 404;
+  constructor(userId: string) {
+    super(`ユーザーが見つかりませんでした id:${userId}`);
     this.name = this.constructor.name;
   }
 }
+```
+
+#### エラー→ステータスマッピング（api/lib/errors/error-status.helper.ts）
+
+DomainError/DbErrorをHTTPステータスに変換：
+
+```typescript
+import { ErrorCode } from '@shared/error-code.const';
+import { ContentfulStatusCode } from '@lib/errors/http-status.const';
+
+export const ERROR_STATUS_MAP = new Map<
+  string,
+  { code: ErrorCode; statusCode: ContentfulStatusCode }
+>([
+  [UserNotFoundError.name, { code: ErrorCode.USER_NOT_FOUND, statusCode: 404 }],
+  [
+    EmailAlreadyExistsError.name,
+    { code: ErrorCode.USER_EMAIL_ALREADY_EXISTS, statusCode: 409 },
+  ],
+  [
+    InvalidPasswordError.name,
+    { code: ErrorCode.USER_INVALID_PASSWORD, statusCode: 401 },
+  ],
+  [
+    UserCreateDbError.name,
+    { code: ErrorCode.INTERNAL_SERVER_ERROR, statusCode: 500 },
+  ],
+]);
+```
+
+#### グローバルエラーハンドラー（api/middlewares/error.middleware.ts）
+
+```typescript
+export const errorHandler = (err: Error, c: Context) => {
+  // ApiErrorはそのまま返却
+  if (err instanceof ApiError) {
+    return c.json(createErrorResponse(err.message, err.code), err.statusCode);
+  }
+
+  // DomainError/DbErrorはマッピングで変換
+  if (err instanceof DomainErrorAbstract || err instanceof DbErrorAbstract) {
+    const status = ERROR_STATUS_MAP.get(err.constructor.name);
+    const statusCode = status?.statusCode || 500;
+    // エラークラスにcodeが明記されていればそれを優先、なければマッピングのcode
+    const code = err?.code || status?.code || ErrorCode.INTERNAL_SERVER_ERROR;
+    return c.json(createErrorResponse(err.message, code), statusCode);
+  }
+
+  // その他は500
+  return c.json(
+    createErrorResponse(
+      'Internal Server Error',
+      ErrorCode.INTERNAL_SERVER_ERROR
+    ),
+    500
+  );
+};
 ```
 
 ### 値オブジェクト

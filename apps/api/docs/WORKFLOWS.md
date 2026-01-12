@@ -289,6 +289,107 @@ pnpm drizzle-kit generate
 
 ---
 
+## 新しいエラーを追加する
+
+### ドメインエラーを追加する場合
+
+#### 1. エラークラスを作成
+
+`src/domains/{domain}/errors/{domain}.error.ts`
+
+```typescript
+import { DomainErrorAbstract } from '@lib/errors/domain-error.abstract';
+
+export class SomeNotFoundError extends DomainErrorAbstract {
+  code = undefined; // ERROR_STATUS_MAPで設定
+  constructor(id: string) {
+    super(`見つかりませんでした id:${id}`);
+    this.name = this.constructor.name;
+  }
+}
+```
+
+#### 2. ErrorCodeを追加（必要な場合）
+
+`shared/error-code.const.ts`
+
+```typescript
+export enum ErrorCode {
+  // 既存のコード...
+  SOME_NOT_FOUND = 'SOME_NOT_FOUND', // 追加
+}
+```
+
+#### 3. ERROR_STATUS_MAPに追加
+
+`src/api/lib/errors/error-status.helper.ts`
+
+```typescript
+import { SomeNotFoundError } from '@domains/{domain}/errors/{domain}.error';
+
+export const ERROR_STATUS_MAP = new Map([
+  // 既存のマッピング...
+  [SomeNotFoundError.name, { code: ErrorCode.SOME_NOT_FOUND, statusCode: 404 }],
+]);
+```
+
+### DBエラーを追加する場合
+
+#### 1. エラークラスを作成
+
+`src/db/repositories/{domain}/{domain}-table.error.ts`
+
+```typescript
+import { DbErrorAbstract } from '@lib/errors/db-error.abstract';
+
+export class SomeCreateDbError extends DbErrorAbstract {
+  code = undefined;
+  constructor() {
+    super(`作成に失敗しました`);
+    this.name = this.constructor.name;
+  }
+}
+```
+
+#### 2. ERROR_STATUS_MAPに追加
+
+```typescript
+import { SomeCreateDbError } from '@db/repositories/{domain}/{domain}-table.error';
+
+export const ERROR_STATUS_MAP = new Map([
+  // 既存のマッピング...
+  [
+    SomeCreateDbError.name,
+    { code: ErrorCode.INTERNAL_SERVER_ERROR, statusCode: 500 },
+  ],
+]);
+```
+
+### API層エラーを追加する場合
+
+認証・認可など、API層で直接throwするエラー：
+
+`src/api/lib/errors/api.error.ts`
+
+```typescript
+import { ApiError } from '@lib/errors/api-error.abstract';
+import { ErrorCode } from '@shared/error-code.const';
+import { ContentfulStatusCode } from '@lib/errors/http-status.const';
+
+export class SomeApiError extends ApiError {
+  public code: ErrorCode = ErrorCode.SOME_ERROR;
+  public statusCode: ContentfulStatusCode = 403;
+  constructor() {
+    super('権限がありません');
+    this.name = this.constructor.name;
+  }
+}
+```
+
+API層エラーは `ERROR_STATUS_MAP` への追加は不要（自身でcode/statusCodeを持つ）。
+
+---
+
 ## バグを修正する
 
 ### 1. 失敗するテストを書く
