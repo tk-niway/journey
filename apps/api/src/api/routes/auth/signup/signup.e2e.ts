@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import app from '@api/index';
 import { cleanupAllTables } from '@db/lib/helpers/database.test-helper';
 import { testRepository } from '@db/repositories/test/test.repository';
+import { ErrorCode } from '@shared/error-code.const';
 
 describe('POST /api/auth/signup - E2E', () => {
   beforeEach(async () => {
@@ -72,6 +73,6 @@ describe('POST /api/auth/signup - E2E', () => {
 
     // エラーレスポンスの内容を確認
     const errorBody = await secondRes.json();
-    expect(errorBody.error.code).toBe('EMAIL_ALREADY_EXISTS');
+    expect(errorBody.error.code).toBe(ErrorCode.USER_EMAIL_ALREADY_EXISTS);
   });
 });

@@ -1,5 +1,5 @@
 import { RequestUser } from '@api/middlewares/access-token.middleware';
-import { UserNotFoundApiError } from '@api/lib/errors/exceptions';
+import { UserNotFoundApiError } from '@api/lib/errors/api.error';
 import { UserApplication } from '@applications/user/user.application';
 
 export const meHandler = async (user: RequestUser) => {

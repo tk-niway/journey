@@ -1,12 +1,9 @@
-import { ContentfulStatusCode } from 'hono/utils/http-status';
-
-export abstract class ApiError extends Error {
-  abstract code: string;
-  abstract statusCode: ContentfulStatusCode;
-}
+import { ApiError } from '@lib/errors/api-error.abstract';
+import { ErrorCode } from '@shared/error-code.const';
+import { ContentfulStatusCode } from '@lib/errors/http-status.const';
 
 export class NotFoundTokenApiError extends ApiError {
-  public code: string = 'NOT_FOUND_TOKEN_API';
+  public code: ErrorCode = ErrorCode.TOKEN_NOT_FOUND;
   public statusCode: ContentfulStatusCode = 401;
   constructor() {
     super('アクセストークンが無効です');
@@ -15,7 +12,7 @@ export class NotFoundTokenApiError extends ApiError {
 }
 
 export class InvalidTokenApiError extends Error implements ApiError {
-  public code: string = 'INVALID_TOKEN_API';
+  public code: ErrorCode = ErrorCode.TOKEN_INVALID;
   public statusCode: ContentfulStatusCode = 401;
   constructor() {
     super('アクセストークンが無効です');
@@ -24,7 +21,7 @@ export class InvalidTokenApiError extends Error implements ApiError {
 }
 
 export class ExpiredTokenApiError extends Error implements ApiError {
-  public code: string = 'EXPIRED_TOKEN_API';
+  public code: ErrorCode = ErrorCode.TOKEN_EXPIRED;
   public statusCode: ContentfulStatusCode = 401;
   constructor() {
     super('アクセストークンが期限切れです');
@@ -33,7 +30,7 @@ export class ExpiredTokenApiError extends Error implements ApiError {
 }
 
 export class InvalidUserApiError extends Error implements ApiError {
-  public code: string = 'INVALID_USER_API';
+  public code: ErrorCode = ErrorCode.USER_INVALID;
   public statusCode: ContentfulStatusCode = 401;
   constructor() {
     super('ユーザーに権限がありません');
@@ -42,7 +39,7 @@ export class InvalidUserApiError extends Error implements ApiError {
 }
 
 export class UserNotFoundApiError extends Error implements ApiError {
-  public code: string = 'USER_NOT_FOUND_API';
+  public code: ErrorCode = ErrorCode.USER_NOT_FOUND;
   public statusCode: ContentfulStatusCode = 404;
   constructor(userId: string) {
     super(`ユーザーが見つかりませんでした id:${userId}`);

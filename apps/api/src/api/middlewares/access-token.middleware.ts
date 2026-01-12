@@ -8,7 +8,7 @@ import {
   InvalidTokenApiError,
   InvalidUserApiError,
   NotFoundTokenApiError,
-} from '@api/lib/errors/exceptions';
+} from '@api/lib/errors/api.error';
 
 export type AccessTokenPayload = {
   sub: string;

@@ -1,5 +1,5 @@
 import { ErrorCode } from '@shared/error-code.const';
 
-export abstract class DomainErrorAbstract extends Error {
+export abstract class DbErrorAbstract extends Error {
   abstract code?: ErrorCode;
 }

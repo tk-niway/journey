@@ -1,34 +1,13 @@
 import { Context } from 'hono';
 import logger from '@lib/loggers';
-import {
-  UserCreateDbError,
-  UserCreateTransactionDbError,
-  UserCredentialCreateDbError,
-} from '@db/repositories/users/users-table.error';
-import {
-  UserAlreadyExistsError,
-  EmailAlreadyExistsError,
-  UserNotFoundError,
-  InvalidPasswordError,
-} from '@domains/user/errors/user.error';
-import type { ContentfulStatusCode } from 'hono/utils/http-status';
-import { ApiError } from '@api/lib/errors/exceptions';
 import { DomainErrorAbstract } from '@lib/errors/domain-error.abstract';
-import { DbErrorAbstract } from '@db/lib/errors/db-error.abstract';
 import { ErrorObject } from '@api/lib/schemas/error/error-object.schema';
+import { ApiError } from '@lib/errors/api-error.abstract';
+import { DbErrorAbstract } from '@lib/errors/db-error.abstract';
+import { ErrorCode } from '@shared/error-code.const';
+import { ERROR_STATUS_MAP } from '@api/lib/errors/error-status.helper';
 
-// DomainErrorAbstractのエラークラス名とステータスコードのマッピング
-const ERROR_STATUS_MAP = new Map<string, ContentfulStatusCode>([
-  [UserAlreadyExistsError.name, 409],
-  [EmailAlreadyExistsError.name, 409],
-  [UserCreateDbError.name, 500],
-  [UserCredentialCreateDbError.name, 500],
-  [UserCreateTransactionDbError.name, 500],
-  [UserNotFoundError.name, 404],
-  [InvalidPasswordError.name, 401],
-]);
-
-const createErrorResponse = (message: string, code: string): ErrorObject => {
+const createErrorResponse = (message: string, code: ErrorCode): ErrorObject => {
   return {
     error: {
       message,
@@ -44,27 +23,26 @@ export const errorHandler = (err: Error, c: Context) => {
     return c.json(createErrorResponse(err.message, err.code), err.statusCode);
   }
 
-  if (err instanceof DomainErrorAbstract) {
-    const statusCode = ERROR_STATUS_MAP.get(err.constructor.name) || 500;
+  if (err instanceof DomainErrorAbstract || err instanceof DbErrorAbstract) {
+    const status = ERROR_STATUS_MAP.get(err.constructor.name);
+    const statusCode = status?.statusCode || 500;
+    const code = err?.code || status?.code || ErrorCode.INTERNAL_SERVER_ERROR;
 
-    return c.json(createErrorResponse(err.message, err.code), statusCode);
-  }
-
-  if (err instanceof DbErrorAbstract) {
-    const statusCode = ERROR_STATUS_MAP.get(err.constructor.name) || 500;
-
-    return c.json(createErrorResponse(err.message, err.code), statusCode);
+    return c.json(createErrorResponse(err.message, code), statusCode);
   }
 
   return c.json(
-    createErrorResponse('Internal Server Error', 'INTERNAL_SERVER_ERROR'),
+    createErrorResponse(
+      'Internal Server Error',
+      ErrorCode.INTERNAL_SERVER_ERROR
+    ),
     500
   );
 };
 
 export const notFoundHandler = (c: Context) => {
   return c.json(
-    createErrorResponse(`Not Found: ${c.req.path}`, 'NOT_FOUND'),
+    createErrorResponse(`Not Found: ${c.req.path}`, ErrorCode.NOT_FOUND),
     404
   );
 };

@@ -4,6 +4,7 @@ import {
   cleanupAllTables,
   createTestUser,
 } from '@db/lib/helpers/database.test-helper';
+import { ErrorCode } from '@shared/error-code.const';
 
 describe('POST /api/auth/login - E2E', () => {
   const testPassword = 'password123';
@@ -92,6 +93,6 @@ describe('POST /api/auth/login - E2E', () => {
 
     // エラーレスポンスの内容を確認
     const errorBody = await res.json();
-    expect(errorBody.error.code).toBe('INVALID_PASSWORD');
+    expect(errorBody.error.code).toBe(ErrorCode.USER_INVALID_PASSWORD);
   });
 });
