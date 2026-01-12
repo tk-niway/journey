@@ -20,7 +20,7 @@ export class NoteApplication {
   }): Promise<NoteEntity> {
     const noteValue = NoteFactory.createNewNoteValue(input);
     const tags = (input.tags ?? []).map((name) =>
-      NoteFactory.createNewTagValue({ name })
+      NoteFactory.createNewTagValue({ name, userId: input.userId })
     );
     const noteEntity = NoteFactory.createNoteEntity(noteValue, tags);
     return this.noteRepository.create(noteEntity);

@@ -15,16 +15,18 @@ export type NewNoteValueArgs = {
 export type NewTagValueArgs = {
   id?: string;
   name: string;
+  userId: string;
   createdAt?: Date;
   updatedAt?: Date;
 };
 
-const uniqById = <T extends { id: string }>(values: T[]): T[] => {
+const uniqByKey = <T>(values: T[], keyFn: (value: T) => string): T[] => {
   const seen = new Set<string>();
   const result: T[] = [];
   for (const value of values) {
-    if (seen.has(value.id)) continue;
-    seen.add(value.id);
+    const key = keyFn(value);
+    if (seen.has(key)) continue;
+    seen.add(key);
     result.push(value);
   }
   return result;
@@ -62,6 +64,7 @@ export class NoteFactory {
     return new TagValue({
       id,
       name: values.name,
+      userId: values.userId,
       createdAt,
       updatedAt,
     });
@@ -83,9 +86,10 @@ export class NoteFactory {
       tag instanceof TagValue ? tag : this.createTagValue(tag)
     );
 
-    const normalizedTags = uniqById(tagValues.map((tag) => tag.values)).map(
-      (tag) => this.createTagValue(tag)
-    );
+    const normalizedTags = uniqByKey(
+      tagValues.map((tag) => tag.values),
+      (tag) => `${tag.userId}:${tag.name}`
+    ).map((tag) => this.createTagValue(tag));
 
     return new NoteEntity(noteValue, normalizedTags);
   }

@@ -6,12 +6,14 @@ import { NoteEntity } from '@domains/note/entities/note.entity';
 import { NoteFactory } from '@domains/note/factories/note.factory';
 import { NoteRepository } from '@domains/note/repositories/note-repository.interface';
 import logger from '@lib/loggers';
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import {
   NoteCreateDbError,
   NoteCreateTransactionDbError,
   NoteUpdateTransactionDbError,
 } from './notes-table.error';
+
+const uniq = <T>(values: T[]): T[] => Array.from(new Set(values));
 
 export class NotesTableRepository implements NoteRepository {
   constructor(private readonly dbClient: DatabaseService) {}
@@ -59,8 +61,7 @@ export class NotesTableRepository implements NoteRepository {
 
   async create(noteEntity: NoteEntity): Promise<NoteEntity> {
     const noteArgs = noteEntity.createNoteArgs();
-    const tagArgs = noteEntity.createTagArgs();
-    const noteTagArgs = noteEntity.createNoteTagArgs();
+    const tagNames = uniq(noteEntity.tags.map((tag) => tag.name));
 
     try {
       return this.dbClient.transaction((db) => {
@@ -73,21 +74,46 @@ export class NotesTableRepository implements NoteRepository {
         const createdNote = createNoteResult[0];
         if (!createdNote) throw new NoteCreateDbError();
 
-        const createdTags =
-          tagArgs.length === 0
-            ? []
-            : db.insert(tagsTable).values(tagArgs).returning().all();
-
-        if (noteTagArgs.length > 0) {
-          db.insert(noteTagsTable).values(noteTagArgs).run();
+        if (tagNames.length === 0) {
+          return NoteFactory.createNoteEntity(createdNote, []);
         }
 
-        return NoteFactory.createNoteEntity(createdNote, createdTags);
+        // (userId, name) のユニーク制約により、同一ユーザー内の同名タグは重複作成されない
+        db.insert(tagsTable)
+          .values(
+            tagNames.map((name) => ({
+              name,
+              userId: noteArgs.userId,
+            }))
+          )
+          .onConflictDoNothing({
+            target: [tagsTable.userId, tagsTable.name],
+          })
+          .run();
+
+        const tags = db
+          .select()
+          .from(tagsTable)
+          .where(
+            and(
+              eq(tagsTable.userId, noteArgs.userId),
+              inArray(tagsTable.name, tagNames)
+            )
+          )
+          .all();
+
+        db.insert(noteTagsTable)
+          .values(
+            tags.map((tag) => ({ noteId: createdNote.id, tagId: tag.id }))
+          )
+          .run();
+
+        return NoteFactory.createNoteEntity(createdNote, tags);
       });
     } catch (error) {
       logger.error(
         `${NotesTableRepository.name}:create`,
-        `values:${JSON.stringify({ note: noteArgs, tags: tagArgs })}`,
+        `values:${JSON.stringify({ note: noteArgs, tagNames })}`,
         error
       );
       throw new NoteCreateTransactionDbError();
@@ -96,8 +122,7 @@ export class NotesTableRepository implements NoteRepository {
 
   async update(noteEntity: NoteEntity): Promise<NoteEntity> {
     const noteArgs = noteEntity.createNoteArgs();
-    const tagArgs = noteEntity.createTagArgs();
-    const noteTagArgs = noteEntity.createNoteTagArgs();
+    const tagNames = uniq(noteEntity.tags.map((tag) => tag.name));
 
     try {
       return this.dbClient.transaction((db) => {
@@ -124,25 +149,45 @@ export class NotesTableRepository implements NoteRepository {
           .where(eq(noteTagsTable.noteId, noteArgs.id))
           .run();
 
-        if (tagArgs.length > 0) {
-          // Tag は Note に集約されるが、DB上は共有されうるため、既存IDは挿入スキップする
-          db.insert(tagsTable)
-            .values(tagArgs)
-            .onConflictDoNothing({ target: tagsTable.id })
-            .run();
+        if (tagNames.length === 0) {
+          return NoteFactory.createNoteEntity(updatedNote, []);
         }
 
-        if (noteTagArgs.length > 0) {
-          db.insert(noteTagsTable).values(noteTagArgs).run();
-        }
+        db.insert(tagsTable)
+          .values(
+            tagNames.map((name) => ({
+              name,
+              userId: noteArgs.userId,
+            }))
+          )
+          .onConflictDoNothing({
+            target: [tagsTable.userId, tagsTable.name],
+          })
+          .run();
 
-        // Tag の取得は省略し、入力値（TagValueObject）で返す
-        return NoteFactory.createNoteEntity(updatedNote, tagArgs);
+        const tags = db
+          .select()
+          .from(tagsTable)
+          .where(
+            and(
+              eq(tagsTable.userId, noteArgs.userId),
+              inArray(tagsTable.name, tagNames)
+            )
+          )
+          .all();
+
+        db.insert(noteTagsTable)
+          .values(
+            tags.map((tag) => ({ noteId: updatedNote.id, tagId: tag.id }))
+          )
+          .run();
+
+        return NoteFactory.createNoteEntity(updatedNote, tags);
       });
     } catch (error) {
       logger.error(
         `${NotesTableRepository.name}:update`,
-        `values:${JSON.stringify({ note: noteArgs, tags: tagArgs })}`,
+        `values:${JSON.stringify({ note: noteArgs, tagNames })}`,
         error
       );
       throw new NoteUpdateTransactionDbError();

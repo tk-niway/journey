@@ -3,6 +3,7 @@ import { z } from 'zod';
 export interface TagValueObject {
   id: string;
   name: string;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,6 +25,7 @@ export class TagValue {
           .string()
           .min(1, 'Name is required')
           .max(128, 'Name is too long'),
+        userId: z.string().min(1, 'User ID is required'),
         createdAt: z.date(),
         updatedAt: z.date(),
       })

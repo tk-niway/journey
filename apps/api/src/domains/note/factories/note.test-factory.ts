@@ -14,7 +14,7 @@ export class NoteTestFactory {
     const userId = args?.userId ?? faker.string.nanoid();
     const title = args?.title ?? faker.lorem.words({ min: 1, max: 3 });
     const content = args?.content ?? faker.lorem.paragraph();
-    const tagNames = args?.tagNames ?? ['テストタグ'];
+    const tagNames = args?.tagNames ?? [faker.lorem.word()];
 
     const noteValue = NoteFactory.createNewNoteValue({
       userId,
@@ -23,7 +23,7 @@ export class NoteTestFactory {
     });
 
     const tags = tagNames.map((name) =>
-      NoteFactory.createNewTagValue({ name })
+      NoteFactory.createNewTagValue({ name, userId })
     );
 
     return NoteFactory.createNoteEntity(noteValue, tags);
