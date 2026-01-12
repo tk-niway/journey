@@ -1,5 +1,5 @@
-import { Link } from "react-router";
-import type { LinkProps } from "react-router";
+import { Link } from 'react-router';
+import type { LinkProps } from 'react-router';
 
 export interface LinkTextProps extends LinkProps {
   /**
@@ -13,11 +13,11 @@ export interface LinkTextProps extends LinkProps {
  */
 export function LinkText({
   children,
-  className = "",
+  className = '',
   ...props
 }: LinkTextProps) {
   const baseStyles =
-    "text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300";
+    'text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300';
 
   return (
     <Link className={`${baseStyles} ${className}`} {...props}>

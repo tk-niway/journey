@@ -1,24 +1,24 @@
-import { createContext, useCallback } from "react";
-import { useNavigate } from "react-router";
-import { useForm, type UseFormReturn } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import type { AxiosError } from "axios";
-import { usePostApiAuthSignup } from "@generated/web-api/default/default";
-import type { PostApiAuthSignupBody } from "@generated/web-api/model/postApiAuthSignupBody";
-import type { PostApiAuthSignup200 } from "@generated/web-api/model/postApiAuthSignup200";
+import { createContext, useCallback } from 'react';
+import { useNavigate } from 'react-router';
+import { useForm, type UseFormReturn } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import type { AxiosError } from 'axios';
+import { usePostApiAuthSignup } from '@generated/web-api/default/default';
+import type { PostApiAuthSignupBody } from '@generated/web-api/model/postApiAuthSignupBody';
+import type { PostApiAuthSignup200 } from '@generated/web-api/model/postApiAuthSignup200';
 
 // Zod スキーマの定義
 const signupSchema = z.object({
   name: z
     .string()
-    .min(2, "名前は2文字以上で入力してください。")
-    .max(100, "名前は100文字以内で入力してください。"),
-  email: z.email("有効なメールアドレスを入力してください。"),
+    .min(2, '名前は2文字以上で入力してください。')
+    .max(100, '名前は100文字以内で入力してください。'),
+  email: z.email('有効なメールアドレスを入力してください。'),
   password: z
     .string()
-    .min(8, "パスワードは8文字以上で入力してください。")
-    .max(100, "パスワードは100文字以内で入力してください。"),
+    .min(8, 'パスワードは8文字以上で入力してください。')
+    .max(100, 'パスワードは100文字以内で入力してください。'),
 });
 
 export type SignupFormData = z.infer<typeof signupSchema>;
@@ -47,9 +47,9 @@ export function SignupFormProvider({
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      name: '',
+      email: '',
+      password: '',
     },
   });
 
@@ -61,9 +61,9 @@ export function SignupFormProvider({
         // サインアップ成功時の処理
         // response.data には PostApiAuthSignup200 型のデータが含まれます
         const userData: PostApiAuthSignup200 = response.data;
-        console.log("サインアップ成功:", userData);
+        console.log('サインアップ成功:', userData);
         // ホームページへリダイレクト
-        navigate("/");
+        navigate('/');
       },
       onError: (error: AxiosError) => {
         // エラーハンドリング
@@ -77,40 +77,40 @@ export function SignupFormProvider({
           if (errorData.errors) {
             Object.entries(errorData.errors).forEach(([field, messages]) => {
               if (
-                field === "name" ||
-                field === "email" ||
-                field === "password"
+                field === 'name' ||
+                field === 'email' ||
+                field === 'password'
               ) {
                 setError(field as keyof PostApiAuthSignupBody, {
-                  type: "server",
-                  message: messages[0] || "入力に問題があります。",
+                  type: 'server',
+                  message: messages[0] || '入力に問題があります。',
                 });
               }
             });
           } else if (errorData.message) {
             // 一般的なエラーメッセージ
-            setError("email", {
-              type: "server",
+            setError('email', {
+              type: 'server',
               message: errorData.message,
             });
           } else {
-            setError("email", {
-              type: "server",
-              message: "サインアップに失敗しました。",
+            setError('email', {
+              type: 'server',
+              message: 'サインアップに失敗しました。',
             });
           }
         } else if (error.request) {
           // リクエストは送信されたが、レスポンスが受け取れなかった場合
-          setError("email", {
-            type: "server",
+          setError('email', {
+            type: 'server',
             message:
-              "サーバーに接続できませんでした。しばらくしてから再度お試しください。",
+              'サーバーに接続できませんでした。しばらくしてから再度お試しください。',
           });
         } else {
           // リクエストの設定中にエラーが発生した場合
-          setError("email", {
-            type: "server",
-            message: "サインアップに失敗しました。もう一度お試しください。",
+          setError('email', {
+            type: 'server',
+            message: 'サインアップに失敗しました。もう一度お試しください。',
           });
         }
       },

@@ -1,11 +1,11 @@
-import type { Route } from "./+types/home2";
-import { Welcome } from "../welcome/welcome";
-import { getApiUsersId } from "@generated/web-api/default/default";
+import type { Route } from './+types/home2';
+import { Welcome } from '../welcome/welcome';
+import { getApiUsersId } from '@generated/web-api/default/default';
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: 'New React Router App' },
+    { name: 'description', content: 'Welcome to React Router!' },
   ];
 }
 

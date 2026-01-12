@@ -1,4 +1,4 @@
-import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios";
+import axios, { type AxiosRequestConfig, type AxiosResponse } from 'axios';
 
 export const apiClient = axios.create({
   baseURL: 'http://localhost:3000/',

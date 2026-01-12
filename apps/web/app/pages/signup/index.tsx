@@ -1,15 +1,15 @@
-import { InputText } from "@components/inputs/InputText";
-import { BaseButton } from "@components/buttons/BaseButton";
-import { Heading } from "@components/texts/Heading";
-import { Description } from "@components/texts/Description";
-import { LinkText } from "@components/texts/LinkText";
-import { SignupFormProvider } from "./contexts/SignupFormContext";
-import { useSignupForm } from "./hooks/useSignupForm";
+import { InputText } from '@components/inputs/InputText';
+import { BaseButton } from '@components/buttons/BaseButton';
+import { Heading } from '@components/texts/Heading';
+import { Description } from '@components/texts/Description';
+import { LinkText } from '@components/texts/LinkText';
+import { SignupFormProvider } from './contexts/SignupFormContext';
+import { useSignupForm } from './hooks/useSignupForm';
 
 export function meta() {
   return [
-    { title: "サインアップ - Journey" },
-    { name: "description", content: "新しいアカウントを作成して始めましょう" },
+    { title: 'サインアップ - Journey' },
+    { name: 'description', content: '新しいアカウントを作成して始めましょう' },
   ];
 }
 
@@ -38,7 +38,7 @@ function SignupForm() {
               autoComplete="name"
               placeholder="山田 太郎"
               error={errors.name}
-              {...register("name")}
+              {...register('name')}
             />
             <InputText
               label="メールアドレス"
@@ -46,7 +46,7 @@ function SignupForm() {
               autoComplete="email"
               placeholder="example@email.com"
               error={errors.email}
-              {...register("email")}
+              {...register('email')}
             />
             <InputText
               label="パスワード"
@@ -54,7 +54,7 @@ function SignupForm() {
               autoComplete="new-password"
               placeholder="8文字以上"
               error={errors.password}
-              {...register("password")}
+              {...register('password')}
             />
           </div>
 

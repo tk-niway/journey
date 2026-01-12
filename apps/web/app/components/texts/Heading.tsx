@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from "react";
+import type { HTMLAttributes } from 'react';
 
 export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
   /**
@@ -18,19 +18,19 @@ export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
 export function Heading({
   level = 2,
   children,
-  className = "",
+  className = '',
   ...props
 }: HeadingProps) {
   const baseStyles =
-    "text-center font-bold tracking-tight text-gray-900 dark:text-white";
+    'text-center font-bold tracking-tight text-gray-900 dark:text-white';
 
   const levelStyles = {
-    1: "text-4xl",
-    2: "text-3xl",
-    3: "text-2xl",
-    4: "text-xl",
-    5: "text-lg",
-    6: "text-base",
+    1: 'text-4xl',
+    2: 'text-3xl',
+    3: 'text-2xl',
+    4: 'text-xl',
+    5: 'text-lg',
+    6: 'text-base',
   };
 
   const combinedClassName = `${baseStyles} ${levelStyles[level]} ${className}`;
