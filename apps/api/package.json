@@ -21,6 +21,7 @@
     "check:all": "npm run format:check && npm run lint:check && npm run type:check"
   },
   "dependencies": {
+    "@journey/shared": "workspace:*",
     "@hono/node-server": "^1.19.6",
     "@hono/swagger-ui": "^0.5.3",
     "@hono/zod-openapi": "^1.2.0",
