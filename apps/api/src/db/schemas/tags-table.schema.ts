@@ -1,4 +1,5 @@
-import { sql } from 'drizzle-orm';
+import { noteTagsTable } from '@db/schemas/note-tags-table.schema';
+import { relations, sql } from 'drizzle-orm';
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 import { nanoid } from 'nanoid';
 
@@ -16,3 +17,7 @@ export const tagsTable = sqliteTable('tags', {
     .default(sql`(unixepoch())`)
     .$onUpdate(() => sql`(unixepoch())`),
 });
+
+export const tagsTableRelations = relations(tagsTable, ({ many }) => ({
+  noteTags: many(noteTagsTable),
+}));

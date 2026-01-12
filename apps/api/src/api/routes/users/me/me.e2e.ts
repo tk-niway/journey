@@ -6,7 +6,7 @@ import {
 } from '@db/lib/helpers/database.test-helper';
 import { ErrorCode } from '@shared/error-code.const';
 
-describe('POST /api/users/me - E2E', () =>  {
+describe('POST /api/users/me - E2E', () => {
   const testPassword = 'password123';
   const testEmail = 'me-e2e-test@example.com';
   const testName = 'テストユーザー';

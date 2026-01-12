@@ -1,6 +1,9 @@
 import { databaseService } from '@db/database.service';
 import { usersTable } from '@db/schemas/users-table.schema';
 import { userCredentialsTable } from '@db/schemas/user-credentials-table.schema';
+import { noteTagsTable } from '@db/schemas/note-tags-table.schema';
+import { notesTable } from '@db/schemas/notes-table.schema';
+import { tagsTable } from '@db/schemas/tags-table.schema';
 import { sql } from 'drizzle-orm';
 import { UserTestFactory } from '@domains/user/factories/user.test-factory';
 import { testRepository } from '@db/repositories/test/test.repository';
@@ -8,7 +11,13 @@ import { UserEntity } from '@domains/user/entities/user.entity';
 import { faker } from '@faker-js/faker';
 
 // 全テーブルのリスト（新しいテーブルを追加したらここに追加するだけ）
-const allTables = [userCredentialsTable, usersTable];
+const allTables = [
+  noteTagsTable,
+  notesTable,
+  tagsTable,
+  userCredentialsTable,
+  usersTable,
+];
 
 /**
  * テスト用にデータベースの全テーブルをクリーンアップする
