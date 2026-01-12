@@ -12,4 +12,17 @@ describe('UserValue', () => {
     const userValue = new UserValue(args);
     expect(userValue.values).toEqual(args);
   });
+
+  it('不正なメールアドレスの場合は例外をスローする', () => {
+    expect(
+      () =>
+        new UserValue({
+          id: '1',
+          name: 'test',
+          email: 'invalid-email',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+    ).toThrow();
+  });
 });
