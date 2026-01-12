@@ -11,7 +11,7 @@ export class NotFoundTokenApiError extends ApiError {
   }
 }
 
-export class InvalidTokenApiError extends Error implements ApiError {
+export class InvalidTokenApiError extends ApiError {
   public code: ErrorCode = ErrorCode.TOKEN_INVALID;
   public statusCode: ContentfulStatusCode = 401;
   constructor() {
@@ -20,7 +20,7 @@ export class InvalidTokenApiError extends Error implements ApiError {
   }
 }
 
-export class ExpiredTokenApiError extends Error implements ApiError {
+export class ExpiredTokenApiError extends ApiError {
   public code: ErrorCode = ErrorCode.TOKEN_EXPIRED;
   public statusCode: ContentfulStatusCode = 401;
   constructor() {
@@ -29,7 +29,7 @@ export class ExpiredTokenApiError extends Error implements ApiError {
   }
 }
 
-export class InvalidUserApiError extends Error implements ApiError {
+export class InvalidUserApiError extends ApiError {
   public code: ErrorCode = ErrorCode.USER_INVALID;
   public statusCode: ContentfulStatusCode = 401;
   constructor() {
@@ -38,7 +38,7 @@ export class InvalidUserApiError extends Error implements ApiError {
   }
 }
 
-export class UserNotFoundApiError extends Error implements ApiError {
+export class UserNotFoundApiError extends ApiError {
   public code: ErrorCode = ErrorCode.USER_NOT_FOUND;
   public statusCode: ContentfulStatusCode = 404;
   constructor(userId: string) {
