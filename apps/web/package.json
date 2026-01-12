@@ -10,6 +10,7 @@
     "orval": "orval --config ./orval.config.js"
   },
   "dependencies": {
+    "@journey/shared": "workspace:*",
     "@react-router/node": "7.10.1",
     "@react-router/serve": "7.10.1",
     "@tanstack/react-query": "^5.90.16",

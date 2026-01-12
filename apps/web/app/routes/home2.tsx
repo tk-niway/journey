@@ -1,6 +1,6 @@
 import type { Route } from "./+types/home";
 import { Welcome } from "../welcome/welcome";
-import { getApiUsersId } from "~/generated/web-api/default/default";
+import { getApiUsersId } from "@generated/web-api/default/default";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -18,6 +18,6 @@ export function HydrateFallback() {
   return <div>Loading...</div>;
 }
 
-export default function Home({loaderData}: {loaderData: any}) {
+export default function Home({ loaderData }: { loaderData: any }) {
   return <Welcome loaderData={loaderData} />;
 }
