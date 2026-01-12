@@ -16,10 +16,14 @@
     "baseUrl": ".",
     "paths": {
       "@shared/*": ["../../shared/*"],
-      "@app/*": ["./app/*"],
       "@public/*": ["./public/*"],
+      "@app/*": ["./app/*"],
       "@generated/*": ["./app/generated/*"],
-      "@components/*": ["./app/components/*"]
+      "@components/*": ["./app/components/*"],
+      "@contexts/*": ["./app/contexts/*"],
+      "@hooks/*": ["./app/hooks/*"],
+      "@pages/*": ["./app/pages/*"],
+      "@lib/*": ["./app/lib/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

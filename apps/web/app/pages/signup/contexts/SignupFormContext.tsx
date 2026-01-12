@@ -7,6 +7,7 @@ import type { AxiosError } from 'axios';
 import { usePostApiAuthSignup } from '@generated/web-api/default/default';
 import type { PostApiAuthSignupBody } from '@generated/web-api/model/postApiAuthSignupBody';
 import type { PostApiAuthSignup200 } from '@generated/web-api/model/postApiAuthSignup200';
+import { useSnackBar } from '@hooks/useSnackBar';
 
 // Zod スキーマの定義
 const signupSchema = z.object({
@@ -42,6 +43,7 @@ export function SignupFormProvider({
   children: React.ReactNode;
 }) {
   const navigate = useNavigate();
+  const { showSnackBar } = useSnackBar();
 
   // react-hook-form の設定（zod スキーマを使用）
   const form = useForm<SignupFormData>({
@@ -62,11 +64,15 @@ export function SignupFormProvider({
         // response.data には PostApiAuthSignup200 型のデータが含まれます
         const userData: PostApiAuthSignup200 = response.data;
         console.log('サインアップ成功:', userData);
+        // 成功メッセージを表示
+        showSnackBar('アカウントを作成しました', 'success');
         // ホームページへリダイレクト
         navigate('/');
       },
       onError: (error: AxiosError) => {
         // エラーハンドリング
+        let errorMessage = 'サインアップに失敗しました';
+
         if (error.response?.data) {
           const errorData = error.response.data as {
             message?: string;
@@ -75,6 +81,9 @@ export function SignupFormProvider({
 
           // バリデーションエラーの場合
           if (errorData.errors) {
+            const firstError = Object.values(errorData.errors)[0]?.[0];
+            errorMessage = firstError || '入力に問題があります';
+
             Object.entries(errorData.errors).forEach(([field, messages]) => {
               if (
                 field === 'name' ||
@@ -83,36 +92,22 @@ export function SignupFormProvider({
               ) {
                 setError(field as keyof PostApiAuthSignupBody, {
                   type: 'server',
-                  message: messages[0] || '入力に問題があります。',
+                  message: messages[0] || '入力に問題があります',
                 });
               }
-            });
-          } else if (errorData.message) {
-            // 一般的なエラーメッセージ
-            setError('email', {
-              type: 'server',
-              message: errorData.message,
-            });
-          } else {
-            setError('email', {
-              type: 'server',
-              message: 'サインアップに失敗しました。',
             });
           }
         } else if (error.request) {
           // リクエストは送信されたが、レスポンスが受け取れなかった場合
-          setError('email', {
-            type: 'server',
-            message:
-              'サーバーに接続できませんでした。しばらくしてから再度お試しください。',
-          });
+          errorMessage =
+            'サーバーに接続できませんでした しばらくしてから再度お試しください';
         } else {
           // リクエストの設定中にエラーが発生した場合
-          setError('email', {
-            type: 'server',
-            message: 'サインアップに失敗しました。もう一度お試しください。',
-          });
+          errorMessage = 'サインアップに失敗しました もう一度お試しください';
         }
+
+        // エラーメッセージをSnackBarで表示
+        showSnackBar(errorMessage, 'error');
       },
     },
   });
