@@ -22,6 +22,9 @@ export enum ErrorCode {
   USER_ID_ALREADY_EXISTS = "USER_ID_ALREADY_EXISTS",
   USER_EMAIL_ALREADY_EXISTS = "USER_EMAIL_ALREADY_EXISTS",
   USER_INVALID_PASSWORD = "USER_INVALID_PASSWORD",
+
+  // ノートエラー
+  NOTE_NOT_FOUND = "NOTE_NOT_FOUND",
 }
 
 export type ErrorCodeType = (typeof ErrorCode)[keyof typeof ErrorCode];

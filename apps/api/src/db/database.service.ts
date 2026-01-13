@@ -11,12 +11,27 @@ import {
   userCredentialsTableRelations,
 } from '@db/schemas/user-credentials-table.schema';
 import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
+import {
+  notesTable,
+  notesTableRelations,
+} from '@db/schemas/notes-table.schema';
+import {
+  noteTagsTable,
+  noteTagsTableRelations,
+} from '@db/schemas/note-tags-table.schema';
+import { tagsTable, tagsTableRelations } from '@db/schemas/tags-table.schema';
 
 const schema = {
   usersTable,
   userCredentialsTable,
   usersTableRelations,
   userCredentialsTableRelations,
+  notesTable,
+  tagsTable,
+  noteTagsTable,
+  notesTableRelations,
+  tagsTableRelations,
+  noteTagsTableRelations,
 };
 
 // データベースファイルのパス
