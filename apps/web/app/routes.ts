@@ -1,17 +1,28 @@
-import { type RouteConfig, index, route } from '@react-router/dev/routes';
+import {
+  type RouteConfig,
+  index,
+  route,
+  layout,
+} from '@react-router/dev/routes';
 
-// ルートの認証要件を定義（参考用）
-// 各ルートファイルで route-loaders.ts の関数を使用して clientLoader を実装する
-// index: 'guest' - 未ログインユーザーのみ
-// home: 'auth' - ログインユーザーのみ
-// signup: 'guest' - 未ログインユーザーのみ
-// signin: 'guest' - 未ログインユーザーのみ
-// 'home/:id': 'auth' - ログインユーザーのみ
-
+/**
+ * ルート定義
+ *
+ * - _auth/layout.tsx 配下: 認証必須ルート（未認証 → /signin へリダイレクト）
+ * - _guest/layout.tsx 配下: ゲスト専用ルート（認証済み → /home へリダイレクト）
+ * - それ以外: 認証不要（誰でもアクセス可能）
+ */
 export default [
-  index('pages/guest/Index.tsx'),
-  route('home', 'pages/home/Index.tsx'),
-  route('signup', 'pages/signup/Index.tsx'),
-  route('signin', 'pages/signin/Index.tsx'),
-  route('home/:id', 'routes/home2.tsx'),
+  // ゲスト専用ルート（未認証ユーザーのみアクセス可能）
+  layout('routes/_guest/layout.tsx', [
+    index('pages/guest/Index.tsx'),
+    route('signup', 'pages/signup/Index.tsx'),
+    route('signin', 'pages/signin/Index.tsx'),
+  ]),
+
+  // 認証必須ルート（ログインユーザーのみアクセス可能）
+  layout('routes/_auth/layout.tsx', [
+    route('home', 'pages/home/Index.tsx'),
+    route('home/:id', 'routes/home2.tsx'),
+  ]),
 ] satisfies RouteConfig;

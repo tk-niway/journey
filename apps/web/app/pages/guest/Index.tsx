@@ -3,11 +3,6 @@ import { Description } from '@components/texts/Description';
 import { BodyText } from '@components/texts/BodyText';
 import { LinkText } from '@components/texts/LinkText';
 import { Link } from 'react-router';
-import { guestLoader } from '@lib/auth/route-loaders';
-
-export async function clientLoader() {
-  return guestLoader();
-}
 
 export function meta() {
   return [

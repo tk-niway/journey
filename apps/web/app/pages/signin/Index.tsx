@@ -5,11 +5,6 @@ import { Description } from '@components/texts/Description';
 import { LinkText } from '@components/texts/LinkText';
 import { SigninFormProvider } from './contexts/SigninFormContext';
 import { useSigninForm } from './hooks/useSigninForm';
-import { guestLoader } from '@lib/auth/route-loaders';
-
-export async function clientLoader() {
-  return guestLoader();
-}
 
 export function meta() {
   return [

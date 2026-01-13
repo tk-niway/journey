@@ -1,5 +1,6 @@
 import type { Route } from './+types/home2';
 import { Welcome } from '../welcome/welcome';
+import { getApiUsersId } from '@generated/web-api/default/default';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,14 +9,14 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-import { getApiUsersId } from '@generated/web-api/default/default';
-import { authLoaderWithData } from '@lib/auth/route-loaders';
-
+/**
+ * データ取得用のclientLoader
+ * 認証チェックはレイアウト (_auth/layout.tsx) で行われるため、
+ * ここではデータ取得のみを行う
+ */
 export async function clientLoader({ params }: { params: { id: string } }) {
-  return authLoaderWithData(async () => {
-    const response = await getApiUsersId(params.id);
-    return response.data;
-  });
+  const response = await getApiUsersId(params.id);
+  return response.data;
 }
 
 export function HydrateFallback() {
