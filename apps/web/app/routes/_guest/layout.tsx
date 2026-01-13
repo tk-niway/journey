@@ -1,5 +1,6 @@
-import { Outlet } from 'react-router';
-import { guestLoader } from '@lib/auth/route-loaders';
+import { Outlet, redirect } from 'react-router';
+import { hasStorageItem, STORAGE_KEYS } from '@app/lib/storage/local-storage';
+import { LoadingScreen } from '@components/feedbacks/LoadingScreen';
 
 /**
  * ゲスト専用ルートのレイアウト
@@ -7,18 +8,15 @@ import { guestLoader } from '@lib/auth/route-loaders';
  * 認証済みの場合は /home にリダイレクトされる
  */
 export async function clientLoader() {
-  return guestLoader();
+  if (hasStorageItem(STORAGE_KEYS.ACCESS_TOKEN)) throw redirect('/home');
+  return {};
 }
 
 /**
  * 認証チェック中のフォールバック表示
  */
 export function HydrateFallback() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-      <div className="text-gray-500 dark:text-gray-400">読み込み中...</div>
-    </div>
-  );
+  return <LoadingScreen />;
 }
 
 export default function GuestLayout() {

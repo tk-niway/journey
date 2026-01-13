@@ -6,10 +6,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from 'react-router';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
 import { SnackBarProvider } from './contexts/SnackBarContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { ReactQueryProvider } from '@contexts/ReactQueryProvider';
 import type { Route } from './+types/root';
 import './app.css';
 
@@ -45,28 +44,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  // SSR 対応: リクエストごとに新しい QueryClient インスタンスを作成
-  // useState の初期化関数を使用することで、コンポーネントの再マウント時にのみ新しいインスタンスを作成
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            staleTime: 1000 * 60 * 5, // 5分
-            refetchOnWindowFocus: false,
-          },
-        },
-      })
-  );
-
   return (
-    <QueryClientProvider client={queryClient}>
-        <SnackBarProvider>
-      <AuthProvider>
+    <ReactQueryProvider>
+      <SnackBarProvider>
+        <AuthProvider>
           <Outlet />
-      </AuthProvider>
-        </SnackBarProvider>
-    </QueryClientProvider>
+        </AuthProvider>
+      </SnackBarProvider>
+    </ReactQueryProvider>
   );
 }
 

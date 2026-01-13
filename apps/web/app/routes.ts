@@ -21,8 +21,5 @@ export default [
   ]),
 
   // 認証必須ルート（ログインユーザーのみアクセス可能）
-  layout('routes/_auth/layout.tsx', [
-    route('home', 'pages/home/Index.tsx'),
-    route('home/:id', 'routes/home2.tsx'),
-  ]),
+  layout('routes/_auth/layout.tsx', [route('home', 'pages/home/Index.tsx')]),
 ] satisfies RouteConfig;

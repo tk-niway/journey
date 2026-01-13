@@ -8,7 +8,8 @@ import { usePostApiAuthLogin } from '@generated/web-api/default/default';
 import type { PostApiAuthLoginBody } from '@generated/web-api/model/postApiAuthLoginBody';
 import type { PostApiAuthLogin200 } from '@generated/web-api/model/postApiAuthLogin200';
 import { useSnackBar } from '@hooks/useSnackBar';
-import { useAuth } from '@contexts/AuthContext';
+import { useAuth } from '@hooks/useAuth';
+import { setStorageItem, STORAGE_KEYS } from '@lib/storage/local-storage';
 
 // Zod スキーマの定義
 const signinSchema = z.object({
@@ -63,8 +64,8 @@ export function SigninFormProvider({
         console.log('サインイン成功:', loginData);
 
         // accessTokenをlocalStorageに保存
-        if (loginData.accessToken && typeof window !== 'undefined') {
-          localStorage.setItem('accessToken', loginData.accessToken);
+        if (loginData.accessToken) {
+          setStorageItem(STORAGE_KEYS.ACCESS_TOKEN, loginData.accessToken);
         }
 
         // AuthContextのユーザー情報を更新

@@ -2,7 +2,7 @@ import { Heading } from '@components/texts/Heading';
 import { Description } from '@components/texts/Description';
 import { BodyText } from '@components/texts/BodyText';
 import { LinkText } from '@components/texts/LinkText';
-import { Link } from 'react-router';
+import { LinkButton } from '@components/buttons/LinkButton';
 
 export function meta() {
   return [
@@ -34,18 +34,12 @@ export default function GuestPage() {
           </BodyText>
 
           <div className="flex flex-col gap-4 mt-6">
-            <Link
-              to="/signup"
-              className="group relative flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors"
-            >
+            <LinkButton to="/signup" variant="primary">
               新規登録
-            </Link>
-            <Link
-              to="/signin"
-              className="group relative flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold bg-gray-200 text-gray-900 hover:bg-gray-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-500 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition-colors"
-            >
+            </LinkButton>
+            <LinkButton to="/signin" variant="secondary">
               ログイン
-            </Link>
+            </LinkButton>
           </div>
 
           <div className="text-center mt-6">

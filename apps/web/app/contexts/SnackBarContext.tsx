@@ -6,10 +6,8 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import {
-  SnackBar,
-  type SnackBarVariant,
-} from '@app/components/snackbars/SnackBar';
+import { SnackBarContainer } from '@app/components/snack-bars/SnackBarContainer';
+import type { SnackBarVariant } from '@app/components/snack-bars/SnackBar';
 
 export interface SnackBarItem {
   id: string;
@@ -157,41 +155,5 @@ export function SnackBarProvider({ children }: SnackBarProviderProps) {
       {children}
       <SnackBarContainer snackBars={snackBars} onClose={startExiting} />
     </SnackBarContext.Provider>
-  );
-}
-
-/**
- * SnackBarContainer
- * SnackBarを表示するコンテナコンポーネント
- */
-interface SnackBarContainerProps {
-  snackBars: SnackBarItem[];
-  onClose: (id: string) => void;
-}
-
-function SnackBarContainer({ snackBars, onClose }: SnackBarContainerProps) {
-  return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none">
-      <div className="relative">
-        {snackBars.map((snackBar, index) => (
-          <div
-            key={snackBar.id}
-            className="pointer-events-auto"
-            style={{
-              transform: `translateY(-${index * 80}px)`,
-            }}
-          >
-            <SnackBar
-              id={snackBar.id}
-              message={snackBar.message}
-              variant={snackBar.variant}
-              isVisible={snackBar.isVisible}
-              isExiting={snackBar.isExiting}
-              onClose={onClose}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
   );
 }

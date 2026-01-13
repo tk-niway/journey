@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { useAuth } from '@contexts/AuthContext';
+import { useAuth } from '@hooks/useAuth';
 import type { PostApiUsersMe200 } from '@generated/web-api/model/postApiUsersMe200';
 
 // Context の型定義

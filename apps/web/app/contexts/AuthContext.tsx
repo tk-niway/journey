@@ -1,7 +1,13 @@
-import { createContext, useContext, useEffect, useRef } from 'react';
+import { createContext, useEffect, useRef } from 'react';
 import { usePostApiUsersMe } from '@generated/web-api/default/default';
 import type { PostApiUsersMeBody } from '@generated/web-api/model/postApiUsersMeBody';
 import type { PostApiUsersMe200 } from '@generated/web-api/model/postApiUsersMe200';
+import {
+  getStorageItem,
+  removeStorageItem,
+  STORAGE_KEYS,
+} from '@lib/storage/local-storage';
+import { LoadingScreen } from '@components/feedbacks/LoadingScreen';
 
 // Context の型定義
 interface AuthContextValue {
@@ -23,9 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     mutation: {
       onError: () => {
         // エラー時はトークンを削除してユーザー情報をクリア
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('accessToken');
-        }
+        removeStorageItem(STORAGE_KEYS.ACCESS_TOKEN);
         hasFetched.current = false;
       },
     },
@@ -33,11 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // ユーザー情報を再取得する関数
   const refetch = () => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = getStorageItem(STORAGE_KEYS.ACCESS_TOKEN);
     if (!accessToken) {
       return;
     }
@@ -50,19 +50,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // ユーザー情報をクリアする関数
   const clearUser = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('accessToken');
-    }
+    removeStorageItem(STORAGE_KEYS.ACCESS_TOKEN);
     hasFetched.current = false;
   };
 
   useEffect(() => {
-    // クライアントサイドでのみlocalStorageにアクセス
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = getStorageItem(STORAGE_KEYS.ACCESS_TOKEN);
 
     if (!accessToken) {
       hasFetched.current = false;
@@ -86,8 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'accessToken') {
-        const accessToken = localStorage.getItem('accessToken');
+      if (e.key === STORAGE_KEYS.ACCESS_TOKEN) {
+        const accessToken = getStorageItem(STORAGE_KEYS.ACCESS_TOKEN);
         if (accessToken && !hasFetched.current) {
           hasFetched.current = true;
           const requestBody: PostApiUsersMeBody = {
@@ -115,14 +108,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearUser,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-// カスタムフック
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+  // ローディング中はLoadingScreenを表示
+  if (isPending) {
+    return (
+      <AuthContext.Provider value={value}>
+        <LoadingScreen message="認証情報を確認中..." />
+      </AuthContext.Provider>
+    );
   }
-  return context;
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

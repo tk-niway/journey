@@ -3,6 +3,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from 'axios';
+import { getStorageItem, STORAGE_KEYS } from '@lib/storage/local-storage';
 
 export const apiClient = axios.create({
   baseURL: 'http://localhost:3000/',
@@ -12,12 +13,9 @@ export const apiClient = axios.create({
 // リクエストインターセプター: Authorizationヘッダーを自動追加
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // クライアントサイドでのみlocalStorageにアクセス
-    if (typeof window !== 'undefined') {
-      const accessToken = localStorage.getItem('accessToken');
-      if (accessToken && config.headers) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
+    const accessToken = getStorageItem(STORAGE_KEYS.ACCESS_TOKEN);
+    if (accessToken && config.headers) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
