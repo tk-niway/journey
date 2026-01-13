@@ -60,7 +60,7 @@ function SigninForm() {
           </div>
 
           <div className="text-center">
-            <LinkText to="/">アカウントをお持ちでない方はこちら</LinkText>
+            <LinkText to="/signup">アカウントをお持ちでない方はこちら</LinkText>
           </div>
         </form>
       </div>

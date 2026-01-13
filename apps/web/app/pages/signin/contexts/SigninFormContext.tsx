@@ -61,7 +61,7 @@ export function SigninFormProvider({
         console.log('サインイン成功:', loginData);
 
         // accessTokenをlocalStorageに保存
-        if (loginData.accessToken) {
+        if (loginData.accessToken && typeof window !== 'undefined') {
           localStorage.setItem('accessToken', loginData.accessToken);
         }
 
