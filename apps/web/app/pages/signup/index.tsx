@@ -5,6 +5,11 @@ import { Description } from '@components/texts/Description';
 import { LinkText } from '@components/texts/LinkText';
 import { SignupFormProvider } from './contexts/SignupFormContext';
 import { useSignupForm } from './hooks/useSignupForm';
+import { guestLoader } from '@lib/auth/route-loaders';
+
+export async function clientLoader() {
+  return guestLoader();
+}
 
 export function meta() {
   return [

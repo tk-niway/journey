@@ -1,6 +1,5 @@
 import type { Route } from './+types/home2';
 import { Welcome } from '../welcome/welcome';
-import { getApiUsersId } from '@generated/web-api/default/default';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -9,9 +8,14 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
+import { getApiUsersId } from '@generated/web-api/default/default';
+import { authLoaderWithData } from '@lib/auth/route-loaders';
+
 export async function clientLoader({ params }: { params: { id: string } }) {
-  const response = await getApiUsersId(params.id);
-  return response.data;
+  return authLoaderWithData(async () => {
+    const response = await getApiUsersId(params.id);
+    return response.data;
+  });
 }
 
 export function HydrateFallback() {

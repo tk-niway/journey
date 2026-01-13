@@ -1,7 +1,5 @@
-import { createContext, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
-import { usePostApiUsersMe } from '@generated/web-api/default/default';
-import type { PostApiUsersMeBody } from '@generated/web-api/model/postApiUsersMeBody';
+import { createContext } from 'react';
+import { useAuth } from '@contexts/AuthContext';
 import type { PostApiUsersMe200 } from '@generated/web-api/model/postApiUsersMe200';
 
 // Context の型定義
@@ -15,48 +13,12 @@ interface HomeContextValue {
 export const HomeContext = createContext<HomeContextValue | null>(null);
 
 // Provider コンポーネント
+// AuthContextを使用してユーザー情報を取得
 export function HomeProvider({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
-  const hasFetched = useRef(false);
-
-  const { data, isLoading, error, mutate } = usePostApiUsersMe({
-    mutation: {
-      onError: () => {
-        // エラー時はログインページへリダイレクト
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('accessToken');
-        }
-        navigate('/signin');
-      },
-    },
-  });
-
-  useEffect(() => {
-    // クライアントサイドでのみlocalStorageにアクセス
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const accessToken = localStorage.getItem('accessToken');
-
-    if (!accessToken) {
-      // アクセストークンがない場合はログインページへリダイレクト
-      navigate('/signin');
-      return;
-    }
-
-    // 初回のみユーザー情報を取得
-    if (!hasFetched.current) {
-      hasFetched.current = true;
-      const requestBody: PostApiUsersMeBody = {
-        accessToken: accessToken,
-      };
-      mutate({ data: requestBody });
-    }
-  }, [navigate, mutate]);
+  const { user, isLoading, error } = useAuth();
 
   const value: HomeContextValue = {
-    user: data?.data ?? null,
+    user,
     isLoading,
     error,
   };

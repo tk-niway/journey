@@ -4,6 +4,11 @@ import { BodyText } from '@components/texts/BodyText';
 import { LabelText } from '@components/texts/LabelText';
 import { HomeProvider } from './contexts/HomeContext';
 import { useHome } from './hooks/useHome';
+import { authLoader } from '@lib/auth/route-loaders';
+
+export async function clientLoader() {
+  return authLoader();
+}
 
 export function meta() {
   return [

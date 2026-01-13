@@ -8,6 +8,7 @@ import { usePostApiAuthLogin } from '@generated/web-api/default/default';
 import type { PostApiAuthLoginBody } from '@generated/web-api/model/postApiAuthLoginBody';
 import type { PostApiAuthLogin200 } from '@generated/web-api/model/postApiAuthLogin200';
 import { useSnackBar } from '@hooks/useSnackBar';
+import { useAuth } from '@contexts/AuthContext';
 
 // Zod スキーマの定義
 const signinSchema = z.object({
@@ -40,6 +41,7 @@ export function SigninFormProvider({
 }) {
   const navigate = useNavigate();
   const { showSnackBar } = useSnackBar();
+  const { refetch } = useAuth();
 
   // react-hook-form の設定（zod スキーマを使用）
   const form = useForm<SigninFormData>({
@@ -65,10 +67,13 @@ export function SigninFormProvider({
           localStorage.setItem('accessToken', loginData.accessToken);
         }
 
+        // AuthContextのユーザー情報を更新
+        refetch();
+
         // 成功メッセージを表示
         showSnackBar('ログインしました', 'success');
         // ホームページへリダイレクト
-        navigate('/');
+        navigate('/home');
       },
       onError: (error: AxiosError) => {
         // エラーハンドリング

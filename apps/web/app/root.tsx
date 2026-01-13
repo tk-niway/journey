@@ -9,6 +9,7 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { SnackBarProvider } from './contexts/SnackBarContext';
+import { AuthProvider } from './contexts/AuthContext';
 import type { Route } from './+types/root';
 import './app.css';
 
@@ -60,9 +61,11 @@ export default function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SnackBarProvider>
-        <Outlet />
-      </SnackBarProvider>
+        <SnackBarProvider>
+      <AuthProvider>
+          <Outlet />
+      </AuthProvider>
+        </SnackBarProvider>
     </QueryClientProvider>
   );
 }
