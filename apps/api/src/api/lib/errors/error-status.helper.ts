@@ -9,6 +9,7 @@ import {
   UserNotFoundError,
   InvalidPasswordError,
 } from '@domains/user/errors/user.error';
+import { NoteNotFoundError } from '@domains/note/errors/note.error';
 import { ContentfulStatusCode } from '@lib/errors/http-status.const';
 import { ErrorCode } from '@shared/error-code.const';
 
@@ -42,4 +43,5 @@ export const ERROR_STATUS_MAP = new Map<
     InvalidPasswordError.name,
     { code: ErrorCode.USER_INVALID_PASSWORD, statusCode: 401 },
   ],
+  [NoteNotFoundError.name, { code: ErrorCode.NOTE_NOT_FOUND, statusCode: 404 }],
 ]);
