@@ -2,25 +2,28 @@ import { createContext, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import type { AxiosError } from 'axios';
 import { usePostApiAuthLogin } from '@generated/web-api/default/default';
 import type { PostApiAuthLoginBody } from '@generated/web-api/model/postApiAuthLoginBody';
 import type { PostApiAuthLogin200 } from '@generated/web-api/model/postApiAuthLogin200';
 import { useSnackBar } from '@hooks/useSnackBar';
+import {
+  axiosErrorHandler,
+  setFormValidationErrors,
+} from '@app/lib/error/axios-error-handler';
 import { useAuth } from '@hooks/useAuth';
 import { setStorageItem, STORAGE_KEYS } from '@lib/storage/local-storage';
+import { emailSchema, passwordSchema } from '@app/lib/validations/auth.schema';
+import z from 'zod';
 
-// Zod スキーマの定義
-const signinSchema = z.object({
-  email: z.email('有効なメールアドレスを入力してください。'),
-  password: z
-    .string()
-    .min(8, 'パスワードは8文字以上で入力してください。')
-    .max(100, 'パスワードは100文字以内で入力してください。'),
+/** サインインフォームのスキーマ */
+export const signinFormSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
 });
 
-export type SigninFormData = z.infer<typeof signinSchema>;
+/** サインインフォームの型 */
+export type SigninFormData = z.infer<typeof signinFormSchema>;
 
 // Context の型定義
 interface SigninFormContextValue {
@@ -46,7 +49,7 @@ export function SigninFormProvider({
 
   // react-hook-form の設定（zod スキーマを使用）
   const form = useForm<SigninFormData>({
-    resolver: zodResolver(signinSchema),
+    resolver: zodResolver(signinFormSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -61,7 +64,6 @@ export function SigninFormProvider({
         // サインイン成功時の処理
         // response.data には PostApiAuthLogin200 型のデータが含まれます
         const loginData: PostApiAuthLogin200 = response.data;
-        console.log('サインイン成功:', loginData);
 
         // accessTokenをlocalStorageに保存
         if (loginData.accessToken) {
@@ -77,42 +79,16 @@ export function SigninFormProvider({
         navigate('/home');
       },
       onError: (error: AxiosError) => {
-        // エラーハンドリング
-        let errorMessage = 'ログインに失敗しました';
+        const { message, validationErrors } = axiosErrorHandler(error);
 
-        if (error.response?.data) {
-          const errorData = error.response.data as {
-            message?: string;
-            errors?: Record<string, string[]>;
-          };
+        // フォームにバリデーションエラーをセット
+        setFormValidationErrors(validationErrors, setError, [
+          'email',
+          'password',
+        ] as const);
 
-          // バリデーションエラーの場合
-          if (errorData.errors) {
-            const firstError = Object.values(errorData.errors)[0]?.[0];
-            errorMessage = firstError || '入力に問題があります';
-
-            Object.entries(errorData.errors).forEach(([field, messages]) => {
-              if (field === 'email' || field === 'password') {
-                setError(field as keyof PostApiAuthLoginBody, {
-                  type: 'server',
-                  message: messages[0] || '入力に問題があります',
-                });
-              }
-            });
-          } else if (errorData.message) {
-            errorMessage = errorData.message;
-          }
-        } else if (error.request) {
-          // リクエストは送信されたが、レスポンスが受け取れなかった場合
-          errorMessage =
-            'サーバーに接続できませんでした しばらくしてから再度お試しください';
-        } else {
-          // リクエストの設定中にエラーが発生した場合
-          errorMessage = 'ログインに失敗しました もう一度お試しください';
-        }
-
-        // エラーメッセージをSnackBarで表示
-        showSnackBar(errorMessage, 'error');
+        // SnackBarでエラーを表示
+        showSnackBar(message, 'error');
       },
     },
   });

@@ -2,27 +2,31 @@ import { createContext, useCallback } from 'react';
 import { useNavigate } from 'react-router';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import type { AxiosError } from 'axios';
 import { usePostApiAuthSignup } from '@generated/web-api/default/default';
 import type { PostApiAuthSignupBody } from '@generated/web-api/model/postApiAuthSignupBody';
 import type { PostApiAuthSignup200 } from '@generated/web-api/model/postApiAuthSignup200';
 import { useSnackBar } from '@hooks/useSnackBar';
+import {
+  axiosErrorHandler,
+  setFormValidationErrors,
+} from '@app/lib/error/axios-error-handler';
+import {
+  emailSchema,
+  nameSchema,
+  passwordSchema,
+} from '@app/lib/validations/auth.schema';
+import z from 'zod';
 
-// Zod スキーマの定義
-const signupSchema = z.object({
-  name: z
-    .string()
-    .min(2, '名前は2文字以上で入力してください。')
-    .max(100, '名前は100文字以内で入力してください。'),
-  email: z.email('有効なメールアドレスを入力してください。'),
-  password: z
-    .string()
-    .min(8, 'パスワードは8文字以上で入力してください。')
-    .max(100, 'パスワードは100文字以内で入力してください。'),
+/** サインアップフォームのスキーマ */
+export const signupFormSchema = z.object({
+  name: nameSchema,
+  email: emailSchema,
+  password: passwordSchema,
 });
 
-export type SignupFormData = z.infer<typeof signupSchema>;
+/** サインアップフォームの型 */
+export type SignupFormData = z.infer<typeof signupFormSchema>;
 
 // Context の型定義
 interface SignupFormContextValue {
@@ -47,7 +51,7 @@ export function SignupFormProvider({
 
   // react-hook-form の設定（zod スキーマを使用）
   const form = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema),
+    resolver: zodResolver(signupFormSchema),
     defaultValues: {
       name: '',
       email: '',
@@ -63,51 +67,24 @@ export function SignupFormProvider({
         // サインアップ成功時の処理
         // response.data には PostApiAuthSignup200 型のデータが含まれます
         const userData: PostApiAuthSignup200 = response.data;
-        console.log('サインアップ成功:', userData);
+
         // 成功メッセージを表示
         showSnackBar('アカウントを作成しました', 'success');
         // ホームページへリダイレクト
         navigate('/');
       },
       onError: (error: AxiosError) => {
-        // エラーハンドリング
-        let errorMessage = 'サインアップに失敗しました';
+        const { message, validationErrors } = axiosErrorHandler(error);
 
-        if (error.response?.data) {
-          const errorData = error.response.data as {
-            message?: string;
-            errors?: Record<string, string[]>;
-          };
+        // フォームにバリデーションエラーをセット
+        setFormValidationErrors(validationErrors, setError, [
+          'name',
+          'email',
+          'password',
+        ] as const);
 
-          // バリデーションエラーの場合
-          if (errorData.errors) {
-            const firstError = Object.values(errorData.errors)[0]?.[0];
-            errorMessage = firstError || '入力に問題があります';
-
-            Object.entries(errorData.errors).forEach(([field, messages]) => {
-              if (
-                field === 'name' ||
-                field === 'email' ||
-                field === 'password'
-              ) {
-                setError(field as keyof PostApiAuthSignupBody, {
-                  type: 'server',
-                  message: messages[0] || '入力に問題があります',
-                });
-              }
-            });
-          }
-        } else if (error.request) {
-          // リクエストは送信されたが、レスポンスが受け取れなかった場合
-          errorMessage =
-            'サーバーに接続できませんでした しばらくしてから再度お試しください';
-        } else {
-          // リクエストの設定中にエラーが発生した場合
-          errorMessage = 'サインアップに失敗しました もう一度お試しください';
-        }
-
-        // エラーメッセージをSnackBarで表示
-        showSnackBar(errorMessage, 'error');
+        // SnackBarでエラーを表示
+        showSnackBar(message, 'error');
       },
     },
   });
