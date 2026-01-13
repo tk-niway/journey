@@ -12,8 +12,18 @@ export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
   children: React.ReactNode;
 }
 
+const levelStyles = {
+  1: 'text-4xl',
+  2: 'text-3xl',
+  3: 'text-2xl',
+  4: 'text-xl',
+  5: 'text-lg',
+  6: 'text-base',
+} as const;
+
 /**
  * 汎用的な見出しコンポーネント
+ * 動的タグパターンでシンプルに実装
  */
 export function Heading({
   level = 2,
@@ -23,54 +33,14 @@ export function Heading({
 }: HeadingProps) {
   const baseStyles =
     'text-center font-bold tracking-tight text-gray-900 dark:text-white';
-
-  const levelStyles = {
-    1: 'text-4xl',
-    2: 'text-3xl',
-    3: 'text-2xl',
-    4: 'text-xl',
-    5: 'text-lg',
-    6: 'text-base',
-  };
-
   const combinedClassName = `${baseStyles} ${levelStyles[level]} ${className}`;
 
-  switch (level) {
-    case 1:
-      return (
-        <h1 className={combinedClassName} {...props}>
-          {children}
-        </h1>
-      );
-    case 2:
-      return (
-        <h2 className={combinedClassName} {...props}>
-          {children}
-        </h2>
-      );
-    case 3:
-      return (
-        <h3 className={combinedClassName} {...props}>
-          {children}
-        </h3>
-      );
-    case 4:
-      return (
-        <h4 className={combinedClassName} {...props}>
-          {children}
-        </h4>
-      );
-    case 5:
-      return (
-        <h5 className={combinedClassName} {...props}>
-          {children}
-        </h5>
-      );
-    case 6:
-      return (
-        <h6 className={combinedClassName} {...props}>
-          {children}
-        </h6>
-      );
-  }
+  // 動的タグコンポーネント
+  const Tag = `h${level}` as const;
+
+  return (
+    <Tag className={combinedClassName} {...props}>
+      {children}
+    </Tag>
+  );
 }
