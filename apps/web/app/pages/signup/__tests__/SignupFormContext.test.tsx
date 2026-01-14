@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router';
 import { SnackBarProvider } from '@contexts/SnackBarContext';
 import { SignupFormProvider, signupFormSchema } from '../contexts/SignupFormContext';
 import SignupPage from '../index';
-import { server } from '../../../../__tests__/mocks/server';
+import { server } from '@__tests__/mocks/server';
 import { http, HttpResponse } from 'msw';
 
 // useNavigateのモック

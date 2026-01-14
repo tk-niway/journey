@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll, vi } from 'vitest';
-import { server } from './__tests__/mocks/server';
+import { server } from '@__tests__/mocks/server';
 
 // MSWサーバーのセットアップ
 beforeAll(() => {

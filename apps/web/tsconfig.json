@@ -23,7 +23,8 @@
       "@contexts/*": ["./app/contexts/*"],
       "@hooks/*": ["./app/hooks/*"],
       "@pages/*": ["./app/pages/*"],
-      "@lib/*": ["./app/lib/*"]
+      "@lib/*": ["./app/lib/*"],
+      "@__tests__/*": ["./__tests__/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
