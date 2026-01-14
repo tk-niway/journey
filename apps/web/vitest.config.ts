@@ -21,7 +21,7 @@ export default defineConfig({
         '**/routes/**',
         '**/+types/**',
         '**/e2e/**',
-        '**/*.e2e.spec.*',
+        '**/*.e2e.*',
       ],
     },
   },
