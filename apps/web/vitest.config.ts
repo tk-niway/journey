@@ -9,7 +9,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     // E2Eテストを除外
-    exclude: ['**/node_modules/**', '**/e2e/**', '**/*.e2e.spec.*'],
+    exclude: ['**/node_modules/**', '**/e2e/**', '**/*.e2e.*'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

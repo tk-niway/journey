@@ -7,7 +7,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './e2e',
   // テストファイルのパターン
-  testMatch: /.*\.e2e\.spec\.(ts|tsx)/,
+  testMatch: /.*\.e2e\.(ts|tsx)/,
   // 並列実行の設定
   fullyParallel: true,
   // CI環境での失敗時の再試行
