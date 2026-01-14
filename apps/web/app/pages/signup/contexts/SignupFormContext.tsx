@@ -52,6 +52,8 @@ export function SignupFormProvider({
   // react-hook-form の設定（zod スキーマを使用）
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupFormSchema),
+    mode: 'onSubmit', // フォーム送信時にバリデーションを実行
+    reValidateMode: 'onChange', // 再バリデーションは変更時
     defaultValues: {
       name: '',
       email: '',
