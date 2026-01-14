@@ -11,9 +11,7 @@ export const nameSchema = z
   .max(100, '名前は100文字以内で入力してください。');
 
 /** メールアドレスのバリデーション */
-export const emailSchema = z
-  .string()
-  .email('有効なメールアドレスを入力してください。');
+export const emailSchema = z.email('有効なメールアドレスを入力してください。');
 
 /** パスワードのバリデーション */
 export const passwordSchema = z
