@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, beforeAll, afterEach, afterAll } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -6,7 +6,8 @@ import { BrowserRouter } from 'react-router';
 import { SnackBarProvider } from '@contexts/SnackBarContext';
 import { SignupFormProvider, signupFormSchema } from '../contexts/SignupFormContext';
 import SignupPage from '../index';
-import { server } from './mocks/server';
+import { server } from '../../../../__tests__/mocks/server';
+import { http, HttpResponse } from 'msw';
 
 // useNavigateのモック
 const mockNavigate = vi.fn();
@@ -18,17 +19,43 @@ vi.mock('react-router', async () => {
   };
 });
 
-// MSWサーバーのセットアップ
-beforeAll(() => {
-  server.listen({ onUnhandledRequest: 'error' });
-});
+// サインアップAPIのモックハンドラーを追加
+beforeEach(() => {
+  server.use(
+    http.post('http://localhost:3000/api/auth/signup', async ({ request }) => {
+      const body = await request.json();
+      const { name, email, password } = body as {
+        name: string;
+        email: string;
+        password: string;
+      };
 
-afterEach(() => {
-  server.resetHandlers();
-});
+      // バリデーションエラーのシミュレーション
+      if (email === 'error@example.com') {
+        return HttpResponse.json(
+          {
+            message: 'このメールアドレスは既に使用されています',
+            errors: {
+              email: ['このメールアドレスは既に使用されています'],
+            },
+          },
+          { status: 400 }
+        );
+      }
 
-afterAll(() => {
-  server.close();
+      // 成功レスポンス
+      return HttpResponse.json(
+        {
+          data: {
+            id: '1',
+            name,
+            email,
+          },
+        },
+        { status: 200 }
+      );
+    })
+  );
 });
 
 /**

@@ -1,10 +1,21 @@
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from 'vitest';
+import { afterEach, beforeAll, afterAll, vi } from 'vitest';
+import { server } from './__tests__/mocks/server';
+
+// MSWサーバーのセットアップ
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'error' });
+});
 
 // 各テスト後にクリーンアップ
 afterEach(() => {
   cleanup();
+  server.resetHandlers();
+});
+
+afterAll(() => {
+  server.close();
 });
 
 // localStorage のモック
