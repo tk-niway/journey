@@ -8,3 +8,6 @@
 
 # Generated
 /app/generated/
+
+# E2E
+/__tests__/e2e/results

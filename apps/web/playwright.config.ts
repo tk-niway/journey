@@ -5,8 +5,9 @@ import { defineConfig, devices } from '@playwright/test';
  * E2Eテストの実行環境を設定
  */
 export default defineConfig({
-  testDir: './e2e',
-  // テストファイルのパターン
+  // ページ単位の__tests__ディレクトリからE2Eテストを検索
+  testDir: './app',
+  // テストファイルのパターン: __tests__ディレクトリ内の.e2e.tsファイル
   testMatch: /.*\.e2e\.(ts|tsx)/,
   // 並列実行の設定
   fullyParallel: true,
@@ -17,13 +18,13 @@ export default defineConfig({
   // 並列実行のワーカー数
   workers: process.env.CI ? 1 : undefined,
   // テスト結果の出力先
-  outputDir: './e2e/results',
+  outputDir: './__tests__/e2e/results',
   // レポーターの設定
   reporter: [
     [
       'html',
       {
-        outputFolder: './e2e/results',
+        outputFolder: './__tests__/e2e/results',
       },
     ],
   ],

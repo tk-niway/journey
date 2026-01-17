@@ -7,7 +7,6 @@ import { z } from 'zod';
 // 環境変数のスキーマ定義
 const envSchema = z.object({
   VITE_API_BASE_URL: z
-    .string()
     .url('VITE_API_BASE_URLは有効なURLである必要があります'),
 });
 
