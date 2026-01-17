@@ -22,14 +22,28 @@ test.describe('Signup Page E2E', () => {
   test('認証済みユーザーは/signupにアクセスすると/homeにリダイレクトされる', async ({
     page,
   }) => {
-    // 認証トークンを設定
-    await page.goto('/');
-    await page.evaluate(() => {
-      localStorage.setItem('accessToken', 'test-token');
+    // /api/users/me をモック（認証済みユーザーとして扱う）
+    await page.route('**/api/users/me', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          id: '1',
+          name: '山田 太郎',
+          email: 'test@example.com',
+          createdAt: '2024-01-01T00:00:00.000Z',
+          updatedAt: '2024-01-01T00:00:00.000Z',
+        }),
+      });
     });
 
-    // /signupにアクセス
-    await page.goto('/signup');
+    // ページ読み込み前にトークンを設定（clientLoaderが実行される前に設定される）
+    await page.addInitScript(() => {
+      window.localStorage.setItem('accessToken', 'test-token');
+    });
+
+    // /signupにアクセスし、/homeへのリダイレクトを待機
+    await page.goto('/signup', { waitUntil: 'networkidle' });
 
     // /homeにリダイレクトされることを確認
     await expect(page).toHaveURL(/\/home/);
