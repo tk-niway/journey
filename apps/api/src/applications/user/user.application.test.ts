@@ -1,4 +1,7 @@
-import { cleanupAllTables, createTestUser } from '@db/lib/helpers/database.test-helper';
+import {
+  cleanupAllTables,
+  createTestUser,
+} from '@db/lib/helpers/database.test-helper';
 import { UserApplication } from '@applications/user/user.application';
 
 describe('UserApplication', () => {

@@ -48,7 +48,9 @@ describe('UsersTableRepository', () => {
       );
       await testRepository.createUser(userEntity);
 
-      const result = await usersTableRepository.findByEmail(userEntity.values.email);
+      const result = await usersTableRepository.findByEmail(
+        userEntity.values.email
+      );
 
       expect(result).not.toBeNull();
       expect(result?.values.id).toBe(userEntity.values.id);
@@ -58,7 +60,9 @@ describe('UsersTableRepository', () => {
     });
 
     it('存在しないメールアドレスの場合はnullを返す', async () => {
-      const result = await usersTableRepository.findByEmail('missing@example.com');
+      const result = await usersTableRepository.findByEmail(
+        'missing@example.com'
+      );
       expect(result).toBeNull();
     });
   });
@@ -80,16 +84,17 @@ describe('UsersTableRepository', () => {
       expect(created.verifyPassword(plainPassword)).toBe(true);
 
       // DBにusersレコードが登録されていることを確認
-      const userInDb = await testRepository.findUserByEmail(userEntity.values.email);
+      const userInDb = await testRepository.findUserByEmail(
+        userEntity.values.email
+      );
       expect(userInDb).toBeDefined();
       expect(userInDb?.id).toBe(userEntity.values.id);
 
       // DBにuser_credentialsレコードが登録されていることを確認
-      const credentialInDb = await databaseService.query.userCredentialsTable.findFirst(
-        {
+      const credentialInDb =
+        await databaseService.query.userCredentialsTable.findFirst({
           where: eq(userCredentialsTable.userId, userEntity.values.id),
-        }
-      );
+        });
       expect(credentialInDb).toBeDefined();
       expect(credentialInDb?.userId).toBe(userEntity.values.id);
     });
@@ -118,9 +123,14 @@ describe('UsersTableRepository', () => {
       });
       expect(users.length).toBe(1);
 
-      const credentials = await databaseService.query.userCredentialsTable.findMany({
-        where: (t, { inArray }) => inArray(t.userId, users.map((u) => u.id)),
-      });
+      const credentials =
+        await databaseService.query.userCredentialsTable.findMany({
+          where: (t, { inArray }) =>
+            inArray(
+              t.userId,
+              users.map((u) => u.id)
+            ),
+        });
       expect(credentials.length).toBe(1);
     });
   });
