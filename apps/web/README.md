@@ -1,87 +1,94 @@
-# Welcome to React Router!
+# Journey Web
 
-A modern, production-ready template for building full-stack React applications using React Router.
+React Router + Vite を使用したフロントエンドアプリケーション。
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+## 技術スタック
 
-## Features
+| カテゴリ             | 技術                        |
+| -------------------- | --------------------------- |
+| フレームワーク       | React Router v7             |
+| ビルドツール         | Vite                        |
+| 状態管理             | React Context + React Query |
+| フォーム管理         | React Hook Form + Zod       |
+| HTTP クライアント    | Axios                       |
+| API 型生成           | Orval                       |
+| テスト               | Vitest + Playwright         |
+| スタイリング         | Tailwind CSS                |
+| 言語                 | TypeScript                  |
+| パッケージマネージャ | pnpm                        |
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+## セットアップ
 
-## Getting Started
-
-### Installation
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-### Development
-
-Start the development server with HMR:
+### 1. 依存関係のインストール
 
 ```bash
-npm run dev
+pnpm install
 ```
 
-Your application will be available at `http://localhost:5173`.
+### 2. 環境変数の設定
 
-## Building for Production
-
-Create a production build:
+必要に応じて環境変数を設定してください。
 
 ```bash
-npm run build
+# .env ファイルを作成（例）
+VITE_API_BASE_URL=http://localhost:3000
 ```
 
-## Deployment
-
-### Docker Deployment
-
-To build and run using Docker:
+### 3. 開発サーバーの起動
 
 ```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+pnpm dev
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+サーバーが起動したら、ブラウザで確認：
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+- アプリケーション: http://localhost:5173
 
-### DIY Deployment
+## コマンド一覧
 
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
+### 開発
 
-Make sure to deploy the output of `npm run build`
+| コマンド     | 説明                           |
+| ------------ | ------------------------------ |
+| `pnpm dev`   | 開発サーバー起動（hot reload） |
+| `pnpm build` | プロダクションビルド           |
+| `pnpm start` | ビルド後のサーバー起動         |
 
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
+### テスト
 
-## Styling
+| コマンド             | 説明                 |
+| -------------------- | -------------------- |
+| `pnpm test`          | テスト実行           |
+| `pnpm test:ui`       | テスト UI モード     |
+| `pnpm test:coverage` | カバレッジ付きテスト |
+| `pnpm test:e2e`      | E2E テスト実行       |
+| `pnpm test:e2e:ui`   | E2E テスト UI モード |
+| `pnpm test:all`      | 全テスト実行         |
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+### コード品質
 
----
+| コマンド            | 説明                 |
+| ------------------- | -------------------- |
+| `pnpm format:check` | フォーマットチェック |
+| `pnpm format:fix`   | フォーマット自動修正 |
+| `pnpm lint:check`   | Lint チェック        |
+| `pnpm lint:fix`     | Lint 自動修正        |
+| `pnpm typecheck`    | 型チェック           |
+| `pnpm check:all`    | 全チェック実行       |
 
-Built with ❤️ using React Router.
+### その他
+
+| コマンド     | 説明                     |
+| ------------ | ------------------------ |
+| `pnpm orval` | OpenAPI 仕様から型を生成 |
+
+## ドキュメント
+
+AI エージェント・開発者向けのドキュメント：
+
+| ファイル                | 説明                       |
+| ----------------------- | -------------------------- |
+| `AGENTS.md`             | アーキテクチャ・規約の概要 |
+| `docs/PROJECT_RULES.md` | 技術詳細・実装例           |
+| `docs/WORKFLOWS.md`     | よくある作業パターン       |
+| `docs/GLOSSARY.md`      | 用語集                     |
