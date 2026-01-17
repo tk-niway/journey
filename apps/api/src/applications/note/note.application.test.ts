@@ -7,6 +7,7 @@ import { testRepository } from '@db/repositories/test/test.repository';
 import { tagsTable } from '@db/schemas/tags-table.schema';
 import { NoteApplication } from '@applications/note/note.application';
 import { NoteTestFactory } from '@domains/note/factories/note.test-factory';
+import { NoteNotFoundError } from '@domains/note/errors/note.error';
 import { and, eq } from 'drizzle-orm';
 
 describe('NoteApplication', () => {
@@ -129,5 +130,96 @@ describe('NoteApplication', () => {
     expect(tags.map((t) => t.userId).sort()).toEqual(
       [user1.values.id, user2.values.id].sort()
     );
+  });
+
+  it('ノートを更新できる', async () => {
+    const user = await createTestUser({
+      email: 'note-update@example.com',
+      password: 'password123',
+    });
+
+    const created = await noteApplication.createNote({
+      userId: user.values.id,
+      title: '元タイトル',
+      content: '元本文',
+      tags: ['タグ1'],
+    });
+
+    const updated = await noteApplication.updateNote({
+      id: created.values.id,
+      title: '更新タイトル',
+      content: '更新本文',
+      userId: user.values.id,
+    });
+
+    expect(updated.values.title).toBe('更新タイトル');
+    expect(updated.values.content).toBe('更新本文');
+    expect(updated.tags.map((tag) => tag.name)).toEqual(['タグ1']);
+  });
+
+  it('タグを追加できる', async () => {
+    const user = await createTestUser({
+      email: 'note-add-tag@example.com',
+      password: 'password123',
+    });
+
+    const created = await noteApplication.createNote({
+      userId: user.values.id,
+      title: 'タイトル',
+      content: '本文',
+      tags: ['タグ1'],
+    });
+
+    const updated = await noteApplication.addTagToNote(
+      created.values.id,
+      'タグ2',
+      user.values.id
+    );
+
+    expect(updated.tags.map((tag) => tag.name).sort()).toEqual(
+      ['タグ1', 'タグ2'].sort()
+    );
+  });
+
+  it('タグを削除できる', async () => {
+    const user = await createTestUser({
+      email: 'note-remove-tag@example.com',
+      password: 'password123',
+    });
+
+    const created = await noteApplication.createNote({
+      userId: user.values.id,
+      title: 'タイトル',
+      content: '本文',
+      tags: ['タグ1', 'タグ2'],
+    });
+
+    const updated = await noteApplication.removeTagFromNote(
+      created.values.id,
+      'タグ1',
+      user.values.id
+    );
+
+    expect(updated.tags.map((tag) => tag.name)).toEqual(['タグ2']);
+  });
+
+  it('ノートを削除できる', async () => {
+    const user = await createTestUser({
+      email: 'note-delete@example.com',
+      password: 'password123',
+    });
+
+    const created = await noteApplication.createNote({
+      userId: user.values.id,
+      title: 'タイトル',
+      content: '本文',
+      tags: [],
+    });
+
+    await noteApplication.deleteNote(created.values.id);
+
+    await expect(
+      noteApplication.getNoteById(created.values.id)
+    ).rejects.toThrow(NoteNotFoundError);
   });
 });

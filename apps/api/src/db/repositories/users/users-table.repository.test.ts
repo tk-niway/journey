@@ -157,7 +157,7 @@ describe('UsersTableRepository', () => {
       });
 
       const updatedEntity = UserFactory.createUserEntity(
-        updatedUserValue,
+        updatedUserValue.values,
         fetched.credential
       );
 
@@ -189,7 +189,7 @@ describe('UsersTableRepository', () => {
 
       const updatedEntity = UserFactory.createUserEntity(
         fetched.values,
-        updatedCredential
+        updatedCredential.values
       );
 
       const updated = await usersTableRepository.update(updatedEntity, {
