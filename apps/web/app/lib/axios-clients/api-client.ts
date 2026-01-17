@@ -5,8 +5,11 @@ import axios, {
 } from 'axios';
 import { getStorageItem, STORAGE_KEYS } from '@lib/storage/local-storage';
 
+const apiBaseUrl =
+  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000/';
+
 export const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/',
+  baseURL: apiBaseUrl,
   timeout: 5000,
 });
 
