@@ -16,8 +16,17 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   // 並列実行のワーカー数
   workers: process.env.CI ? 1 : undefined,
+  // テスト結果の出力先
+  outputDir: './e2e/results',
   // レポーターの設定
-  reporter: 'html',
+  reporter: [
+    [
+      'html',
+      {
+        outputFolder: './e2e/results',
+      },
+    ],
+  ],
   // 共有設定
   use: {
     baseURL: 'http://localhost:5173',
