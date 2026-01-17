@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate web API types
+        run: pnpm --filter web orval
+
       - name: Web check
         run: pnpm --filter web check:all
 
