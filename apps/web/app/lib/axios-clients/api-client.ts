@@ -1,30 +1,12 @@
-import axios, {
-  type AxiosRequestConfig,
-  type AxiosResponse,
-  type InternalAxiosRequestConfig,
-} from 'axios';
-import { getStorageItem, STORAGE_KEYS } from '@lib/storage/local-storage';
+import type { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { createApiClient } from './api-instance';
+import { attachAuthInterceptor } from './auth-interceptor';
+import { resolveApiBaseUrl } from './api-base-url';
 
-const apiBaseUrl =
-  import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000/';
+const apiBaseUrl = resolveApiBaseUrl(import.meta.env.VITE_API_BASE_URL);
 
-export const apiClient = axios.create({
-  baseURL: apiBaseUrl,
-  timeout: 5000,
-});
-
-// リクエストインターセプター: Authorizationヘッダーを自動追加
-apiClient.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const accessToken = getStorageItem(STORAGE_KEYS.ACCESS_TOKEN);
-    if (accessToken && config.headers) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
+export const apiClient = attachAuthInterceptor(
+  createApiClient(apiBaseUrl, 5000)
 );
 
 // orvalのmutator用の関数
