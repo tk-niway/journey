@@ -12,7 +12,9 @@ Journey - Turborepo を使用したモノレポ構成のフルスタックアプ
 /
 ├── apps/
 │   ├── api/    # バックエンド: REST API（Hono + Drizzle ORM）
+│   │   └── README.md  # APIのセットアップ詳細
 │   └── web/    # フロントエンド: Webアプリ（React Router）
+│       └── README.md  # Webのセットアップ詳細
 ├── shared/     # 共有リソース（OpenAPI仕様等）
 └── docs/       # プロジェクトドキュメント
 ```
@@ -44,6 +46,11 @@ Journey - Turborepo を使用したモノレポ構成のフルスタックアプ
 | `apps/web` | フロントエンド | React Router, Vite             |
 | 共通       | -              | TypeScript, pnpm, Turborepo    |
 
+## 前提
+
+- Node.js `>=24.7.0`
+- pnpm `9.0.0`
+
 ## モノレポ操作
 
 ### 全体操作
@@ -61,6 +68,13 @@ pnpm build
 # 全アプリのLint
 pnpm lint
 ```
+
+### セットアップの参照先
+
+詳細なセットアップ手順（環境変数、DB、型生成など）は各アプリのREADMEを参照してください。
+
+- `apps/api/README.md`
+- `apps/web/README.md`
 
 ### 特定アプリの操作
 
@@ -92,6 +106,13 @@ OpenAPI仕様書からフロントエンド用の型を生成：
 1. `apps/api` で OpenAPI仕様書を更新
 2. `shared/openapi.yml` に出力
 3. `apps/web` で型生成コマンドを実行
+
+モノレポのルートから実行する場合の例：
+
+```bash
+pnpm --filter api gen:openapi
+pnpm --filter web orval
+```
 
 ## 各アプリの詳細ドキュメント
 
