@@ -66,6 +66,18 @@ import { Something } from '@public/...'; // public/ 配下
 import { Something } from '@__tests__/...'; // __tests__/ 配下
 ```
 
+## コーディングルール
+
+- 汎用的に使えるコンポーネントは `app/components` に配置する
+- `app/components` のコンポーネントはUIの記述に専念し、ロジックは原則引数で受け取る
+- `app/pages` 配下のページコンポーネントは専用Contextで状態を保持し、Hookでロジックを記述する
+- `pages/{feature}` は `Index.tsx` / `contexts` / `hooks` / `__tests__` を基本構成とする
+- ページファイル名は必ず `Index.tsx`（大文字のI）にする
+- Context/Provider/Hook/Component の命名は用語集の規約に合わせる
+- ルート定義は `app/routes.ts`、レイアウトは `app/routes/_auth` と `app/routes/_guest` に配置する
+- API通信/エラーハンドリング/バリデーション/ストレージは `app/lib` 配下に集約する
+- テストは `__tests__` 配下に置き、E2Eは `.e2e.ts`、テスト名は日本語で記述する
+
 ## 具体的な実装例
 
 ### ページコンポーネント
