@@ -1,13 +1,13 @@
 import { createContext, useEffect, useRef } from 'react';
-import { usePostApiUsersMe } from '@generated/web-api/default/default';
-import type { PostApiUsersMeBody } from '@generated/web-api/model/postApiUsersMeBody';
-import type { PostApiUsersMe200 } from '@generated/web-api/model/postApiUsersMe200';
+import { usePostApiUsersMe } from '@app/generated/web-api/default/default';
+import type { PostApiUsersMeBody } from '@app/generated/web-api/model/postApiUsersMeBody';
+import type { PostApiUsersMe200 } from '@app/generated/web-api/model/postApiUsersMe200';
 import {
   getStorageItem,
   removeStorageItem,
   STORAGE_KEYS,
-} from '@lib/storage/local-storage';
-import { LoadingScreen } from '@components/feedbacks/LoadingScreen';
+} from '@app/lib/storage/local-storage';
+import { LoadingScreen } from '@app/components/feedbacks/LoadingScreen';
 
 // Context の型定義
 interface AuthContextValue {

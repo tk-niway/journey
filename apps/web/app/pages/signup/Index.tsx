@@ -1,9 +1,9 @@
-import { InputText } from '@components/inputs/InputText';
-import { BaseButton } from '@components/buttons/BaseButton';
-import { Heading } from '@components/texts/Heading';
-import { Description } from '@components/texts/Description';
-import { LinkText } from '@components/texts/LinkText';
-import { CenteredLayout } from '@components/layouts/CenteredLayout';
+import { InputText } from '@app/components/inputs/InputText';
+import { BaseButton } from '@app/components/buttons/BaseButton';
+import { Heading } from '@app/components/texts/Heading';
+import { Description } from '@app/components/texts/Description';
+import { LinkText } from '@app/components/texts/LinkText';
+import { CenteredLayout } from '@app/components/layouts/CenteredLayout';
 import { SignupFormProvider } from './contexts/SignupFormContext';
 import { useSignupForm } from './hooks/useSignupForm';
 

@@ -6,8 +6,7 @@ import { z } from 'zod';
 
 // 環境変数のスキーマ定義
 const envSchema = z.object({
-  VITE_API_BASE_URL: z
-    .url('VITE_API_BASE_URLは有効なURLである必要があります'),
+  VITE_API_BASE_URL: z.url('VITE_API_BASE_URLは有効なURLである必要があります'),
 });
 
 // 環境変数検証プラグイン
@@ -24,7 +23,8 @@ function validateEnv(mode: string): Plugin {
         if (error instanceof z.ZodError) {
           const errorMessages = error.issues
             .map((issue) => {
-              const path = issue.path.length > 0 ? issue.path.join('.') : 'root';
+              const path =
+                issue.path.length > 0 ? issue.path.join('.') : 'root';
               return `  - ${path}: ${issue.message}`;
             })
             .join('\n');

@@ -1,9 +1,9 @@
-import { Heading } from '@components/texts/Heading';
-import { Description } from '@components/texts/Description';
-import { BodyText } from '@components/texts/BodyText';
-import { LinkText } from '@components/texts/LinkText';
-import { LinkButton } from '@components/buttons/LinkButton';
-import { CenteredLayout } from '@components/layouts/CenteredLayout';
+import { Heading } from '@app/components/texts/Heading';
+import { Description } from '@app/components/texts/Description';
+import { BodyText } from '@app/components/texts/BodyText';
+import { LinkText } from '@app/components/texts/LinkText';
+import { LinkButton } from '@app/components/buttons/LinkButton';
+import { CenteredLayout } from '@app/components/layouts/CenteredLayout';
 
 export function meta() {
   return [

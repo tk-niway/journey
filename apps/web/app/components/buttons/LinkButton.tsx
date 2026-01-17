@@ -28,7 +28,10 @@ export function LinkButton({
   };
 
   return (
-    <Link className={`${baseStyles} ${variantStyles[variant]} ${className}`} {...props}>
+    <Link
+      className={`${baseStyles} ${variantStyles[variant]} ${className}`}
+      {...props}
+    >
       {children}
     </Link>
   );

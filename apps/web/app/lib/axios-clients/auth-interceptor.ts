@@ -1,5 +1,5 @@
 import type { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
-import { getStorageItem, STORAGE_KEYS } from '@lib/storage/local-storage';
+import { getStorageItem, STORAGE_KEYS } from '@app/lib/storage/local-storage';
 
 /**
  * Authorizationヘッダーを付与するインターセプターを追加する

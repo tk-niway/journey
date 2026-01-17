@@ -1,4 +1,4 @@
-import { BodyText } from '@components/texts/BodyText';
+import { BodyText } from '@app/components/texts/BodyText';
 
 interface LoadingScreenProps {
   /** 表示するメッセージ */

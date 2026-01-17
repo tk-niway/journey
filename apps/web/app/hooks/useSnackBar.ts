@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { SnackBarContext } from '@contexts/SnackBarContext';
+import { SnackBarContext } from '@app/contexts/SnackBarContext';
 import type { SnackBarVariant } from '@app/components/snack-bars/SnackBar';
 
 /**

@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { AxiosError } from 'axios';
-import { usePostApiAuthSignup } from '@generated/web-api/default/default';
-import type { PostApiAuthSignupBody } from '@generated/web-api/model/postApiAuthSignupBody';
-import type { PostApiAuthSignup200 } from '@generated/web-api/model/postApiAuthSignup200';
-import { useSnackBar } from '@hooks/useSnackBar';
+import { usePostApiAuthSignup } from '@app/generated/web-api/default/default';
+import type { PostApiAuthSignupBody } from '@app/generated/web-api/model/postApiAuthSignupBody';
+import type { PostApiAuthSignup200 } from '@app/generated/web-api/model/postApiAuthSignup200';
+import { useSnackBar } from '@app/hooks/useSnackBar';
 import {
   axiosErrorHandler,
   setFormValidationErrors,

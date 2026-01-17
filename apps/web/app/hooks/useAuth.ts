@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { AuthContext } from '@contexts/AuthContext';
+import { AuthContext } from '@app/contexts/AuthContext';
 
 /**
  * 認証情報を取得するカスタムフック

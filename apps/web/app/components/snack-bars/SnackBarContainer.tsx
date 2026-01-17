@@ -1,5 +1,5 @@
 import { SnackBar } from './SnackBar';
-import type { SnackBarItem } from '@contexts/SnackBarContext';
+import type { SnackBarItem } from '@app/contexts/SnackBarContext';
 
 interface SnackBarContainerProps {
   snackBars: SnackBarItem[];

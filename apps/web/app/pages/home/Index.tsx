@@ -1,8 +1,8 @@
-import { Heading } from '@components/texts/Heading';
-import { Description } from '@components/texts/Description';
-import { BodyText } from '@components/texts/BodyText';
-import { LabelText } from '@components/texts/LabelText';
-import { CenteredLayout } from '@components/layouts/CenteredLayout';
+import { Heading } from '@app/components/texts/Heading';
+import { Description } from '@app/components/texts/Description';
+import { BodyText } from '@app/components/texts/BodyText';
+import { LabelText } from '@app/components/texts/LabelText';
+import { CenteredLayout } from '@app/components/layouts/CenteredLayout';
 import { HomeProvider } from './contexts/HomeContext';
 import { useHome } from './hooks/useHome';
 

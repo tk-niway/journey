@@ -1,6 +1,6 @@
 import { Outlet, redirect } from 'react-router';
 import { hasStorageItem, STORAGE_KEYS } from '@app/lib/storage/local-storage';
-import { LoadingScreen } from '@components/feedbacks/LoadingScreen';
+import { LoadingScreen } from '@app/components/feedbacks/LoadingScreen';
 
 /**
  * ゲスト専用ルートのレイアウト

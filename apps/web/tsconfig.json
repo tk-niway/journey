@@ -18,12 +18,6 @@
       "@shared/*": ["../../shared/*"],
       "@public/*": ["./public/*"],
       "@app/*": ["./app/*"],
-      "@generated/*": ["./app/generated/*"],
-      "@components/*": ["./app/components/*"],
-      "@contexts/*": ["./app/contexts/*"],
-      "@hooks/*": ["./app/hooks/*"],
-      "@pages/*": ["./app/pages/*"],
-      "@lib/*": ["./app/lib/*"],
       "@__tests__/*": ["./__tests__/*"]
     },
     "esModuleInterop": true,

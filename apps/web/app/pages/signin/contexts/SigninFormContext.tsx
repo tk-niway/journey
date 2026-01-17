@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { AxiosError } from 'axios';
-import { usePostApiAuthLogin } from '@generated/web-api/default/default';
-import type { PostApiAuthLoginBody } from '@generated/web-api/model/postApiAuthLoginBody';
-import type { PostApiAuthLogin200 } from '@generated/web-api/model/postApiAuthLogin200';
-import { useSnackBar } from '@hooks/useSnackBar';
+import { usePostApiAuthLogin } from '@app/generated/web-api/default/default';
+import type { PostApiAuthLoginBody } from '@app/generated/web-api/model/postApiAuthLoginBody';
+import type { PostApiAuthLogin200 } from '@app/generated/web-api/model/postApiAuthLogin200';
+import { useSnackBar } from '@app/hooks/useSnackBar';
 import {
   axiosErrorHandler,
   setFormValidationErrors,
 } from '@app/lib/error/axios-error-handler';
-import { useAuth } from '@hooks/useAuth';
-import { setStorageItem, STORAGE_KEYS } from '@lib/storage/local-storage';
+import { useAuth } from '@app/hooks/useAuth';
+import { setStorageItem, STORAGE_KEYS } from '@app/lib/storage/local-storage';
 import { emailSchema, passwordSchema } from '@app/lib/validations/auth.schema';
 import z from 'zod';
 

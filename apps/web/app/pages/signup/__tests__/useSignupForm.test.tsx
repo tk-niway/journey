@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router';
-import { SnackBarProvider } from '@contexts/SnackBarContext';
+import { SnackBarProvider } from '@app/contexts/SnackBarContext';
 import { SignupFormProvider } from '../contexts/SignupFormContext';
 import { useSignupForm } from '../hooks/useSignupForm';
 
@@ -36,7 +36,9 @@ describe('useSignupForm', () => {
 
   it('SignupFormProviderの外で使用するとエラーを投げる', () => {
     // エラーをキャッチするためのコンソールエラーを無視
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleError = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
 
     expect(() => {
       renderHook(() => useSignupForm());

@@ -16,7 +16,9 @@ test.describe('Signup Page E2E', () => {
 
     // ページが正しく表示される
     await expect(page).toHaveTitle(/サインアップ/);
-    await expect(page.getByRole('heading', { name: 'アカウントを作成' })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: 'アカウントを作成' })
+    ).toBeVisible();
   });
 
   test('認証済みユーザーは/signupにアクセスすると/homeにリダイレクトされる', async ({
@@ -56,13 +58,17 @@ test.describe('Signup Page E2E', () => {
     await expect(page.getByLabel('名前')).toBeVisible();
     await expect(page.getByLabel('メールアドレス')).toBeVisible();
     await expect(page.getByLabel('パスワード')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'アカウントを作成' })).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: 'アカウントを作成' })
+    ).toBeVisible();
   });
 
   test('サインインへのリンクが表示される', async ({ page }) => {
     await page.goto('/signup');
 
-    const signinLink = page.getByRole('link', { name: /既にアカウントをお持ちの方はこちら/ });
+    const signinLink = page.getByRole('link', {
+      name: /既にアカウントをお持ちの方はこちら/,
+    });
     await expect(signinLink).toBeVisible();
     await expect(signinLink).toHaveAttribute('href', '/signin');
   });
@@ -79,9 +85,15 @@ test.describe('Signup Page E2E', () => {
     await page.getByRole('button', { name: 'アカウントを作成' }).click();
 
     // エラーメッセージが表示されることを確認
-    await expect(page.getByText('名前は2文字以上で入力してください。')).toBeVisible();
-    await expect(page.getByText('有効なメールアドレスを入力してください。')).toBeVisible();
-    await expect(page.getByText('パスワードは8文字以上で入力してください。')).toBeVisible();
+    await expect(
+      page.getByText('名前は2文字以上で入力してください。')
+    ).toBeVisible();
+    await expect(
+      page.getByText('有効なメールアドレスを入力してください。')
+    ).toBeVisible();
+    await expect(
+      page.getByText('パスワードは8文字以上で入力してください。')
+    ).toBeVisible();
   });
 
   test('有効なデータでフォームを送信できる', async ({ page }) => {
@@ -118,10 +130,14 @@ test.describe('Signup Page E2E', () => {
     }).toPass();
   });
 
-  test('サインインリンクをクリックすると/signinに遷移する', async ({ page }) => {
+  test('サインインリンクをクリックすると/signinに遷移する', async ({
+    page,
+  }) => {
     await page.goto('/signup');
 
-    const signinLink = page.getByRole('link', { name: /既にアカウントをお持ちの方はこちら/ });
+    const signinLink = page.getByRole('link', {
+      name: /既にアカウントをお持ちの方はこちら/,
+    });
     await signinLink.click();
 
     // /signinに遷移することを確認
