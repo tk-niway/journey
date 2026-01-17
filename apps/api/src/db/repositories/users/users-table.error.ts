@@ -25,3 +25,29 @@ export class UserCreateTransactionDbError extends DbErrorAbstract {
     this.name = this.constructor.name;
   }
 }
+
+export class UserUpdateDbError extends DbErrorAbstract {
+  code = undefined;
+  constructor() {
+    super(`ユーザー更新に失敗しました、しばらく経ってから再度お試しください`);
+    this.name = this.constructor.name;
+  }
+}
+
+export class UserCredentialUpdateDbError extends DbErrorAbstract {
+  code = undefined;
+  constructor() {
+    super(`認証情報更新に失敗しました、しばらく経ってから再度お試しください`);
+    this.name = this.constructor.name;
+  }
+}
+
+export class UserUpdateTransactionDbError extends DbErrorAbstract {
+  code = undefined;
+  constructor() {
+    super(
+      `ユーザー更新処理中にエラーが発生しました、しばらく経ってから再度お試しください`
+    );
+    this.name = this.constructor.name;
+  }
+}

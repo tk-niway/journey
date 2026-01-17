@@ -2,6 +2,7 @@ import { UserEntity } from '@domains/user/entities/user.entity';
 import {
   UserCredentialValueArgs,
   UserCredentialValue,
+  UserCredentialValueObject,
 } from '@domains/user/values/user-credential.value';
 import { UserValue, UserValueArgs } from '@domains/user/values/user.value';
 import { nanoid } from 'nanoid';
@@ -62,6 +63,22 @@ export class UserFactory {
       userId: values.userId,
       hashedPassword: hashedPassword,
       createdAt,
+      updatedAt,
+    });
+  }
+
+  static createUpdatedUserCredentialValue(values: {
+    current: UserCredentialValueObject;
+    plainPassword: string;
+    updatedAt?: Date;
+  }): UserCredentialValue {
+    const updatedAt = values.updatedAt ?? new Date();
+    const hashedPassword = UserCredentialValue.hashPassword(
+      values.plainPassword
+    );
+    return new UserCredentialValue({
+      ...values.current,
+      hashedPassword,
       updatedAt,
     });
   }

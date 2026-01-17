@@ -24,6 +24,14 @@ export class UserNotFoundError extends DomainErrorAbstract {
   }
 }
 
+export class UserNotFoundByIdError extends DomainErrorAbstract {
+  code = undefined;
+  constructor(userId: string) {
+    super(`ユーザーが見つかりませんでした id:${userId}`);
+    this.name = this.constructor.name;
+  }
+}
+
 export class InvalidPasswordError extends DomainErrorAbstract {
   code = undefined;
   constructor() {
