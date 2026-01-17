@@ -6,6 +6,64 @@ components:
   schemas: {}
   parameters: {}
 paths:
+  /api/users:
+    get:
+      parameters:
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: integer
+            nullable: true
+            minimum: 0
+          required: false
+          name: offset
+          in: query
+      responses:
+        '200':
+          description: List users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          minLength: 1
+                          example: '123'
+                        email:
+                          type: string
+                          format: email
+                          example: john.doe@example.com
+                        name:
+                          type: string
+                          minLength: 1
+                          example: John Doe
+                        createdAt:
+                          type: string
+                          format: date-time
+                          example: '2021-01-01'
+                        updatedAt:
+                          type: string
+                          format: date-time
+                          example: '2021-01-01'
+                      required:
+                        - id
+                        - email
+                        - name
+                        - createdAt
+                        - updatedAt
+                required:
+                  - users
   /api/users/{id}:
     get:
       parameters:
@@ -65,6 +123,61 @@ paths:
       responses:
         '200':
           description: Retrieve the current user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    minLength: 1
+                    example: '123'
+                  email:
+                    type: string
+                    format: email
+                    example: john.doe@example.com
+                  name:
+                    type: string
+                    minLength: 1
+                    example: John Doe
+                  createdAt:
+                    type: string
+                    format: date-time
+                    example: '2021-01-01'
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    example: '2021-01-01'
+                required:
+                  - id
+                  - email
+                  - name
+                  - createdAt
+                  - updatedAt
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  example: John Doe
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@example.com
+                currentPassword:
+                  type: string
+                  minLength: 8
+                newPassword:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Update current user
           content:
             application/json:
               schema:
@@ -210,3 +323,379 @@ paths:
                 required:
                   - accessToken
                   - user
+  /api/notes:
+    get:
+      responses:
+        '200':
+          description: List notes for current user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    content:
+                      type: string
+                    userId:
+                      type: string
+                    tags:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          name:
+                            type: string
+                        required:
+                          - id
+                          - name
+                    createdAt:
+                      type: string
+                      format: date-time
+                    updatedAt:
+                      type: string
+                      format: date-time
+                  required:
+                    - id
+                    - title
+                    - content
+                    - userId
+                    - tags
+                    - createdAt
+                    - updatedAt
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                content:
+                  type: string
+                  minLength: 1
+                  maxLength: 20000
+                tags:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 128
+              required:
+                - title
+                - content
+      responses:
+        '200':
+          description: Create note
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  userId:
+                    type: string
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                        - id
+                        - name
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                  - id
+                  - title
+                  - content
+                  - userId
+                  - tags
+                  - createdAt
+                  - updatedAt
+  /api/notes/{id}:
+    get:
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: note-id
+          required: true
+          name: id
+          in: path
+      responses:
+        '200':
+          description: Retrieve note by id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  userId:
+                    type: string
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                        - id
+                        - name
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                  - id
+                  - title
+                  - content
+                  - userId
+                  - tags
+                  - createdAt
+                  - updatedAt
+    patch:
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: note-id
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+                content:
+                  type: string
+                  minLength: 1
+                  maxLength: 20000
+              required:
+                - title
+                - content
+      responses:
+        '200':
+          description: Update note
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  userId:
+                    type: string
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                        - id
+                        - name
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                  - id
+                  - title
+                  - content
+                  - userId
+                  - tags
+                  - createdAt
+                  - updatedAt
+    delete:
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: note-id
+          required: true
+          name: id
+          in: path
+      responses:
+        '200':
+          description: Delete note
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                required:
+                  - id
+  /api/notes/{id}/tags:
+    post:
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: note-id
+          required: true
+          name: id
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+              required:
+                - name
+      responses:
+        '200':
+          description: Add tag to note
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  userId:
+                    type: string
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                        - id
+                        - name
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                  - id
+                  - title
+                  - content
+                  - userId
+                  - tags
+                  - createdAt
+                  - updatedAt
+  /api/notes/{id}/tags/{tagName}:
+    delete:
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            example: note-id
+          required: true
+          name: id
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            example: tag
+          required: true
+          name: tagName
+          in: path
+      responses:
+        '200':
+          description: Remove tag from note
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  userId:
+                    type: string
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                      required:
+                        - id
+                        - name
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                  - id
+                  - title
+                  - content
+                  - userId
+                  - tags
+                  - createdAt
+                  - updatedAt
