@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24.7.0"
+          cache: "pnpm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9.0.0"
+          run_install: false
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Web check
+        run: pnpm --filter web check:all
+
+      - name: API check
+        run: pnpm --filter api check:all
+
+      - name: Web test
+        run: pnpm --filter web test
+
+      - name: API test
+        run: pnpm --filter api test
+
+      - name: Install Playwright deps
+        run: pnpm --filter web exec playwright install --with-deps
+
+      - name: Web e2e
+        run: pnpm --filter web test:e2e
