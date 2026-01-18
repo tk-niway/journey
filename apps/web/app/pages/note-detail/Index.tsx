@@ -6,10 +6,7 @@ import { Description } from '@app/components/texts/Description';
 import { Heading } from '@app/components/texts/Heading';
 import { LabelText } from '@app/components/texts/LabelText';
 import { LinkText } from '@app/components/texts/LinkText';
-import {
-  formatNoteDate,
-  formatTagsLabel,
-} from '@app/lib/notes/note-utils';
+import { formatNoteDate, formatTagsLabel } from '@app/lib/notes/note-utils';
 import { NoteDetailProvider } from './contexts/NoteDetailContext';
 import { useNoteDetail } from './hooks/useNoteDetail';
 
@@ -93,10 +90,7 @@ function NoteDetailContent() {
         </LinkButton>
         {isOwner && (
           <>
-            <LinkButton
-              to={`/notes/${note.id}/edit`}
-              className="w-auto px-4"
-            >
+            <LinkButton to={`/notes/${note.id}/edit`} className="w-auto px-4">
               編集
             </LinkButton>
             <BaseButton

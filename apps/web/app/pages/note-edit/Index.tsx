@@ -49,9 +49,7 @@ function NoteEditForm() {
   if (!isOwner) {
     return (
       <CenteredLayout maxWidth="xl">
-        <BodyText color="error">
-          このノートは作成者のみ編集できます
-        </BodyText>
+        <BodyText color="error">このノートは作成者のみ編集できます</BodyText>
         <div className="text-center">
           <LinkText to={`/notes/${note.id}`}>ノート詳細に戻る</LinkText>
         </div>
@@ -63,9 +61,7 @@ function NoteEditForm() {
     <CenteredLayout maxWidth="xl">
       <div>
         <Heading className="mt-6">ノートを編集</Heading>
-        <Description className="mt-2">
-          タイトルと内容を更新します
-        </Description>
+        <Description className="mt-2">タイトルと内容を更新します</Description>
       </div>
       <div className="mt-6 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
         <div className="space-y-2">

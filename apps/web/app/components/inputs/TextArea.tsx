@@ -1,8 +1,7 @@
 import { forwardRef } from 'react';
 import type { FieldError } from 'react-hook-form';
 
-export interface TextAreaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string;
   error?: FieldError;
 }

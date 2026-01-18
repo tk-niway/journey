@@ -121,9 +121,7 @@ function NoteList({
   }
 
   if (error) {
-    return (
-      <BodyText color="error">ノートの取得に失敗しました</BodyText>
-    );
+    return <BodyText color="error">ノートの取得に失敗しました</BodyText>;
   }
 
   if (notes.length === 0) {
@@ -144,7 +142,11 @@ function NoteList({
                 <LinkText to={`/notes/${note.id}`} className="text-base">
                   {note.title}
                 </LinkText>
-                <BodyText size="sm" color="muted" className="whitespace-pre-wrap">
+                <BodyText
+                  size="sm"
+                  color="muted"
+                  className="whitespace-pre-wrap"
+                >
                   {truncateText(note.content, 120)}
                 </BodyText>
                 {note.tags.length > 0 && (

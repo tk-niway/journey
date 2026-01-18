@@ -43,8 +43,9 @@ interface NoteCreateContextValue {
 }
 
 // Context の作成
-export const NoteCreateContext =
-  createContext<NoteCreateContextValue | null>(null);
+export const NoteCreateContext = createContext<NoteCreateContextValue | null>(
+  null
+);
 
 // Provider コンポーネント
 export function NoteCreateProvider({

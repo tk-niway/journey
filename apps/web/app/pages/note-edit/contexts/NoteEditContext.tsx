@@ -45,15 +45,10 @@ interface NoteEditContextValue {
 }
 
 // Context の作成
-export const NoteEditContext =
-  createContext<NoteEditContextValue | null>(null);
+export const NoteEditContext = createContext<NoteEditContextValue | null>(null);
 
 // Provider コンポーネント
-export function NoteEditProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function NoteEditProvider({ children }: { children: React.ReactNode }) {
   const { noteId } = useParams();
   const navigate = useNavigate();
   const { showSnackBar } = useSnackBar();

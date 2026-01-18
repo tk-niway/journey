@@ -72,34 +72,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [mutate]);
 
-  // accessTokenの変更を監視（別タブでの変更を検知）
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === STORAGE_KEYS.ACCESS_TOKEN) {
-        const accessToken = getStorageItem(STORAGE_KEYS.ACCESS_TOKEN);
-        if (accessToken && !hasFetched.current) {
-          hasFetched.current = true;
-          const requestBody: PostApiUsersMeBody = {
-            accessToken: accessToken,
-          };
-          mutate({ data: requestBody });
-        } else if (!accessToken) {
-          hasFetched.current = false;
-        }
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, [mutate]);
-
   const value: AuthContextValue = {
     user: data?.data ?? null,
     isLoading: isPending,

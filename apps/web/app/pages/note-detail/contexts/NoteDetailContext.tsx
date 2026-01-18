@@ -23,8 +23,9 @@ interface NoteDetailContextValue {
 }
 
 // Context の作成
-export const NoteDetailContext =
-  createContext<NoteDetailContextValue | null>(null);
+export const NoteDetailContext = createContext<NoteDetailContextValue | null>(
+  null
+);
 
 // Provider コンポーネント
 export function NoteDetailProvider({
