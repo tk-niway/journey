@@ -202,16 +202,31 @@ describe('UsersTableRepository', () => {
 
   describe('findMany', () => {
     it('ユーザー一覧を取得できる', async () => {
+      // createdAtを明示的に設定して順序を保証する
+      // SQLiteのunixepoch()は秒単位のため、1秒ずつずらす
+      const baseTime = new Date('2024-01-01T00:00:00Z');
       const user1 = UserTestFactory.createUserEntity(
-        { email: 'list-1@example.com', name: 'ユーザー1' },
+        {
+          email: 'list-1@example.com',
+          name: 'ユーザー1',
+          createdAt: new Date(baseTime.getTime() + 1000),
+        },
         { plainPassword: 'password1' }
       );
       const user2 = UserTestFactory.createUserEntity(
-        { email: 'list-2@example.com', name: 'ユーザー2' },
+        {
+          email: 'list-2@example.com',
+          name: 'ユーザー2',
+          createdAt: new Date(baseTime.getTime() + 2000),
+        },
         { plainPassword: 'password2' }
       );
       const user3 = UserTestFactory.createUserEntity(
-        { email: 'list-3@example.com', name: 'ユーザー3' },
+        {
+          email: 'list-3@example.com',
+          name: 'ユーザー3',
+          createdAt: new Date(baseTime.getTime() + 3000),
+        },
         { plainPassword: 'password3' }
       );
 
@@ -226,9 +241,9 @@ describe('UsersTableRepository', () => {
 
       expect(users.length).toBe(2);
       const emails = users.map((user) => user.email);
-      expect(emails).toEqual(
-        expect.arrayContaining(['list-1@example.com', 'list-2@example.com'])
-      );
+      // findManyはdesc(createdAt)で降順ソートされるため、最新の2件（user3, user2）が返される
+      // createdAtを明示的に設定しているため、順序が保証される
+      expect(emails).toEqual(['list-3@example.com', 'list-2@example.com']);
     });
   });
 });
