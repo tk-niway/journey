@@ -6,6 +6,7 @@ import { UserTestFactory } from '@domains/user/factories/user.test-factory';
 import { eq } from 'drizzle-orm';
 import { userCredentialsTable } from '@db/schemas/user-credentials-table.schema';
 import { UserCreateTransactionDbError } from '@db/repositories/users/users-table.error';
+import { UserFactory } from '@domains/user/factories/user.factory';
 
 describe('UsersTableRepository', () => {
   let usersTableRepository: UsersTableRepository;
@@ -132,6 +133,102 @@ describe('UsersTableRepository', () => {
             ),
         });
       expect(credentials.length).toBe(1);
+    });
+  });
+
+  describe('update', () => {
+    it('ユーザー情報を更新できる', async () => {
+      const plainPassword = 'password123';
+      const userEntity = UserTestFactory.createUserEntity(
+        { email: 'update@example.com', name: '更新前ユーザー' },
+        { plainPassword }
+      );
+      await testRepository.createUser(userEntity);
+
+      const fetched = await usersTableRepository.findById(userEntity.values.id);
+      expect(fetched).not.toBeNull();
+      if (!fetched) return;
+
+      const updatedUserValue = UserFactory.createUserValue({
+        ...fetched.values,
+        name: '更新後ユーザー',
+        email: 'update-new@example.com',
+        updatedAt: new Date(),
+      });
+
+      const updatedEntity = UserFactory.createUserEntity(
+        updatedUserValue.values,
+        fetched.credential
+      );
+
+      const updated = await usersTableRepository.update(updatedEntity, {
+        updateCredential: false,
+      });
+
+      expect(updated.values.name).toBe('更新後ユーザー');
+      expect(updated.values.email).toBe('update-new@example.com');
+      expect(updated.verifyPassword(plainPassword)).toBe(true);
+    });
+
+    it('パスワードを更新できる', async () => {
+      const plainPassword = 'password123';
+      const userEntity = UserTestFactory.createUserEntity(
+        { email: 'update-password@example.com', name: '更新対象ユーザー' },
+        { plainPassword }
+      );
+      await testRepository.createUser(userEntity);
+
+      const fetched = await usersTableRepository.findById(userEntity.values.id);
+      expect(fetched).not.toBeNull();
+      if (!fetched) return;
+
+      const updatedCredential = UserFactory.createUpdatedUserCredentialValue({
+        current: fetched.credential,
+        plainPassword: 'newPassword123',
+      });
+
+      const updatedEntity = UserFactory.createUserEntity(
+        fetched.values,
+        updatedCredential.values
+      );
+
+      const updated = await usersTableRepository.update(updatedEntity, {
+        updateCredential: true,
+      });
+
+      expect(updated.verifyPassword('newPassword123')).toBe(true);
+    });
+  });
+
+  describe('findMany', () => {
+    it('ユーザー一覧を取得できる', async () => {
+      const user1 = UserTestFactory.createUserEntity(
+        { email: 'list-1@example.com', name: 'ユーザー1' },
+        { plainPassword: 'password1' }
+      );
+      const user2 = UserTestFactory.createUserEntity(
+        { email: 'list-2@example.com', name: 'ユーザー2' },
+        { plainPassword: 'password2' }
+      );
+      const user3 = UserTestFactory.createUserEntity(
+        { email: 'list-3@example.com', name: 'ユーザー3' },
+        { plainPassword: 'password3' }
+      );
+
+      await testRepository.createUser(user1);
+      await testRepository.createUser(user2);
+      await testRepository.createUser(user3);
+
+      const users = await usersTableRepository.findMany({
+        limit: 2,
+        offset: 0,
+      });
+
+      expect(users.length).toBe(2);
+      const emails = users.map((user) => user.email);
+      expect(emails).toEqual(
+        expect.arrayContaining(['list-1@example.com', 'list-2@example.com'])
+      );
     });
   });
 });

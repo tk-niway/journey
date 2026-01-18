@@ -2,11 +2,15 @@ import {
   UserCreateDbError,
   UserCredentialCreateDbError,
   UserCreateTransactionDbError,
+  UserCredentialUpdateDbError,
+  UserUpdateDbError,
+  UserUpdateTransactionDbError,
 } from '@db/repositories/users/users-table.error';
 import {
   UserAlreadyExistsError,
   EmailAlreadyExistsError,
   UserNotFoundError,
+  UserNotFoundByIdError,
   InvalidPasswordError,
 } from '@domains/user/errors/user.error';
 import { NoteNotFoundError } from '@domains/note/errors/note.error';
@@ -38,7 +42,23 @@ export const ERROR_STATUS_MAP = new Map<
     UserCreateTransactionDbError.name,
     { code: ErrorCode.INTERNAL_SERVER_ERROR, statusCode: 500 },
   ],
+  [
+    UserUpdateDbError.name,
+    { code: ErrorCode.INTERNAL_SERVER_ERROR, statusCode: 500 },
+  ],
+  [
+    UserCredentialUpdateDbError.name,
+    { code: ErrorCode.INTERNAL_SERVER_ERROR, statusCode: 500 },
+  ],
+  [
+    UserUpdateTransactionDbError.name,
+    { code: ErrorCode.INTERNAL_SERVER_ERROR, statusCode: 500 },
+  ],
   [UserNotFoundError.name, { code: ErrorCode.USER_NOT_FOUND, statusCode: 404 }],
+  [
+    UserNotFoundByIdError.name,
+    { code: ErrorCode.USER_NOT_FOUND, statusCode: 404 },
+  ],
   [
     InvalidPasswordError.name,
     { code: ErrorCode.USER_INVALID_PASSWORD, statusCode: 401 },

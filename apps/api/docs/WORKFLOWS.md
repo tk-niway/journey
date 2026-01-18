@@ -78,7 +78,12 @@ app.openapi(someRoute, async (c) => {
 export default app;
 ```
 
-### 4. E2Eテストを作成
+### 4. スキーマ生成
+```bash
+pnpm gen:openapi
+```
+
+### 5. E2Eテストを作成
 
 `src/api/routes/{feature}/{action}.e2e.ts`
 
