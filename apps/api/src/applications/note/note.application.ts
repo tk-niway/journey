@@ -58,8 +58,9 @@ export class NoteApplication {
     };
 
     const tags =
-      input.tags?.map((name) =>
-        NoteFactory.createNewTagValue({ name, userId: input.userId }).values
+      input.tags?.map(
+        (name) =>
+          NoteFactory.createNewTagValue({ name, userId: input.userId }).values
       ) ?? currentNote.tags;
 
     const noteEntity = NoteFactory.createNoteEntity(noteValue, tags);
