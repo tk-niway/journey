@@ -1,23 +1,12 @@
 import { databaseService } from '@db/database.service';
-import { usersTable } from '@db/schemas/users-table.schema';
-import { userCredentialsTable } from '@db/schemas/user-credentials-table.schema';
-import { noteTagsTable } from '@db/schemas/note-tags-table.schema';
-import { notesTable } from '@db/schemas/notes-table.schema';
-import { tagsTable } from '@db/schemas/tags-table.schema';
 import { sql } from 'drizzle-orm';
 import { UserTestFactory } from '@domains/user/factories/user.test-factory';
 import { testRepository } from '@db/repositories/test/test.repository';
 import { UserEntity } from '@domains/user/entities/user.entity';
 import { faker } from '@faker-js/faker';
 
-// 全テーブルのリスト（新しいテーブルを追加したらここに追加するだけ）
-const allTables = [
-  noteTagsTable,
-  notesTable,
-  tagsTable,
-  userCredentialsTable,
-  usersTable,
-];
+// テーブル名のリスト（テーブルオブジェクトと対応）
+const tableNames = ['note_tags', 'notes', 'tags', 'user_credentials', 'users'];
 
 /**
  * テスト用にデータベースの全テーブルをクリーンアップする
@@ -27,8 +16,9 @@ export const cleanupAllTables = async () => {
   // 外部キー制約を一時的に無効化して一括削除
   databaseService.run(sql`PRAGMA foreign_keys = OFF`);
 
-  for (const table of allTables) {
-    await databaseService.delete(table);
+  // テーブル名を直接指定して全行削除
+  for (const tableName of tableNames) {
+    databaseService.run(sql.raw(`DELETE FROM ${tableName}`));
   }
 
   databaseService.run(sql`PRAGMA foreign_keys = ON`);
